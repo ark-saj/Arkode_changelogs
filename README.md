@@ -116,27 +116,37 @@ ficticias (Conec-ta y Everban) con **datos aislados por tenant vía RLS**.
 
 ```bash
 npx supabase start          # levanta Postgres + API local (aplica migraciones + seed)
+npm run db:seed-auth        # crea los usuarios demo y los mapea a su empresa
 npx supabase status -o env  # muestra URL y keys locales
 ```
 
-Creá `.env.local` con las credenciales locales y el tenant a renderizar:
+Creá `.env.local` con las credenciales locales:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<ANON_KEY de supabase status>
-NEXT_PUBLIC_TENANT=conecta
 ```
 
-`npm run dev` y el footer mostrará "Conectado a Supabase". Sin estas variables,
-la app usa los datos mock (cero config).
+`npm run dev` y entrá por **`/login`**. El flujo: login → te redirige al portal de
+**tu** empresa (`/[empresa]`), con su branding (color, logo) y solo sus changelogs.
 
-### Test de aislamiento (gate)
+Usuarios demo (sembrados por `db:seed-auth`):
+
+| Empresa  | Usuario               | Contraseña  |
+| -------- | --------------------- | ----------- |
+| Conec-ta | `admin@conecta.test`  | `demo12345` |
+| Everban  | `admin@everban.test`  | `demo12345` |
+
+> Sin variables de Supabase la app cae a datos mock (cero config, sin login).
+
+### Tests de aislamiento (gate)
 
 ```bash
-npm test   # requiere supabase local corriendo
+npm test   # requiere supabase local corriendo + npm run db:seed-auth
 ```
 
-Verifica que un tenant **nunca** lee datos de otro (RLS por claim `tenant_id`).
+Verifica que un tenant **nunca** lee datos de otro, por dos caminos de RLS: claim
+`tenant_id` (token de servicio/agente) y membresía por `auth.uid()` (login real).
 
 ### Producción
 
