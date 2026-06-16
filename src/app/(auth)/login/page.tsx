@@ -4,26 +4,55 @@ import * as React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2, Lock, Mail } from "lucide-react";
+import { ArrowRight, Loader2, Lock, Mail, TriangleAlert } from "lucide-react";
+
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+
+const HAS_SUPABASE = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+);
 
 /**
- * Arkode-branded login.
+ * Arkode-branded login: a frosted "browser window" over chrome orbs, adapted to
+ * the Arkode brand (near-black navy, one coral accent, Geist + Newsreader).
  *
- * Composition inspired by a classic glassmorphism mockup: a large frosted
- * "browser window" panel floating over chrome orbs (blurred where they sit
- * behind the glass, sharp where they peek over the edges). Adapted to Arkode —
- * near-black navy canvas, one coral accent, Geist + Newsreader.
- *
- * Real auth + tenant routing land in Fase 1; for now submit goes to the portal.
+ * Authenticates against Supabase Auth — the session carries the tenant
+ * membership RLS uses, and the user lands on their own tenant portal.
  */
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    setTimeout(() => router.push("/"), 700);
+
+    // Demo mode (no Supabase configured): skip auth, go to the default portal.
+    if (!HAS_SUPABASE) {
+      router.push("/");
+      return;
+    }
+
+    const form = new FormData(e.currentTarget);
+    const email = String(form.get("email") ?? "");
+    const password = String(form.get("password") ?? "");
+
+    const supabase = createSupabaseBrowserClient();
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (authError) {
+      setError("Correo o contraseña incorrectos.");
+      setLoading(false);
+      return;
+    }
+    // Session cookie set → root routes to the user's tenant.
+    router.push("/");
+    router.refresh();
   }
 
   return (
@@ -118,6 +147,13 @@ export default function LoginPage() {
                   </a>
                 </div>
 
+                {error && (
+                  <p className="flex items-center gap-2 rounded-xl border border-ark-coral/40 bg-ark-coral/10 px-3 py-2 text-sm text-ark-bone">
+                    <TriangleAlert className="h-4 w-4 shrink-0 text-ark-coral" />
+                    {error}
+                  </p>
+                )}
+
                 <button
                   type="submit"
                   disabled={loading}
@@ -135,8 +171,13 @@ export default function LoginPage() {
               </form>
 
               <p className="mt-5 text-xs leading-relaxed text-ark-bone/40">
-                Demo: cualquier credencial te lleva al portal. El login real
-                (Supabase Auth + ruteo por empresa) llega en la Fase 1.
+                Demo:{" "}
+                <span className="font-mono text-ark-bone/60">
+                  admin@conecta.test
+                </span>{" "}
+                /{" "}
+                <span className="font-mono text-ark-bone/60">demo12345</span>.
+                Cada usuario entra solo al portal de su empresa.
               </p>
             </div>
           </div>
