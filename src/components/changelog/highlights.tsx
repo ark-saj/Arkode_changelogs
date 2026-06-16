@@ -50,7 +50,7 @@ export function Highlights({
               <h3 className="mt-3 font-display text-base font-semibold leading-snug tracking-tight">
                 {ticket.title}
               </h3>
-              <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+              <p className="mt-1 line-clamp-2 font-description text-sm text-muted-foreground">
                 {ticket.summary}
               </p>
               {category && (

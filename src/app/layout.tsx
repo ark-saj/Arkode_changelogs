@@ -1,28 +1,33 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Newsreader } from "next/font/google";
 
 import "./globals.css";
 import { ThemeProvider } from "@/components/layout/theme-provider";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { LiquidBackground } from "@/components/decor/liquid-background";
-import { getActiveBrand, brandStyle } from "@/lib/branding";
-import { activeDataSource } from "@/lib/data/repository";
 
-const inter = Inter({
+// Geist = Arkode brand workhorse (display, headings, UI).
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+// Geist Mono = badges / codes / numeric labels.
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-geist-mono",
+  display: "swap",
+});
+// Inter = kept on purpose for changelog DESCRIPTIONS (clean, high legibility).
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// Newsreader italic = Arkode editorial accent.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-newsreader",
+  style: ["italic", "normal"],
   display: "swap",
 });
 
-const brand = getActiveBrand();
-
 export const metadata: Metadata = {
-  title: `${brand.name} · Novedades del Sistema`,
+  title: "Arkode · Centro de Novedades",
   description:
     "Mantente al día con las mejoras que se implementan para facilitar tu trabajo.",
   openGraph: {
-    title: `${brand.name} · Novedades del Sistema`,
+    title: "Arkode · Centro de Novedades",
     description:
       "Mantente al día con las mejoras que se implementan para facilitar tu trabajo.",
     type: "website",
@@ -30,7 +35,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0f1a",
+  themeColor: "#001C43",
 };
 
 export default function RootLayout({
@@ -38,10 +43,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const dataSource = activeDataSource();
-
   return (
-    <html lang="es" suppressHydrationWarning className={inter.variable}>
+    <html
+      lang="es"
+      suppressHydrationWarning
+      className={`${geist.variable} ${geistMono.variable} ${inter.variable} ${newsreader.variable}`}
+    >
       <body className="font-sans">
         <ThemeProvider
           attribute="class"
@@ -49,16 +56,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div
-            id="top"
-            style={brandStyle(brand)}
-            className="relative flex min-h-screen flex-col"
-          >
-            <LiquidBackground />
-            <SiteHeader brand={brand} />
-            <main className="flex-1">{children}</main>
-            <SiteFooter brand={brand} dataSource={dataSource} />
-          </div>
+          {children}
         </ThemeProvider>
       </body>
     </html>

@@ -10,8 +10,14 @@
 */
 @layer base {
   :root {
-    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-display: var(--font-sans);
+    /* Typography — Geist is the Arkode brand workhorse (UI, headings, display).
+       Inter is kept ON PURPOSE for changelog descriptions (cleanest to read).
+       Newsreader italic = Arkode editorial accent. Geist Mono = badges/codes. */
+    --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-display: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-description: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-editorial: var(--font-newsreader), "Newsreader", Georgia, serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
     /* Light theme */
     --background: 40 33% 97%;

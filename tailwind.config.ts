@@ -40,6 +40,20 @@ const config: Config = {
           fix: "hsl(var(--status-fix))",
           optimization: "hsl(var(--status-optimization))",
         },
+        // Arkode platform palette (fixed brand colors, not tenant-themeable).
+        // Used by the Arkode-branded login; never repaints the tenant portal.
+        ark: {
+          coral: "#FF6C5D",
+          navy: "#001C43",
+          bone: "#F6EFE4",
+          n800: "#19213D",
+          n700: "#353E5C",
+          n600: "#6D758F",
+          n500: "#A1A7BB",
+          n400: "#D7DBE7",
+          n300: "#EDEFF5",
+          n200: "#F8FAFF",
+        },
       },
       borderRadius: {
         "4xl": "2rem",
@@ -50,6 +64,11 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "var(--font-sans)", "sans-serif"],
+        // Changelog descriptions stay on Inter (kept on purpose).
+        description: ["var(--font-description)", "var(--font-sans)", "sans-serif"],
+        // Arkode editorial accent (Newsreader italic).
+        editorial: ["var(--font-editorial)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
         glass: "0 8px 32px 0 rgba(15, 23, 42, 0.12)",

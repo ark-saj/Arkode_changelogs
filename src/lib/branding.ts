@@ -14,6 +14,8 @@ export interface BrandTheme {
   name: string;
   /** Short tagline shown under the name. */
   tagline: string;
+  /** Optional logo shown in the header instead of the name (Fase 0). Path under /public. */
+  logo?: string;
   /** HSL triples (no `hsl()` wrapper) mapped to CSS variables. */
   vars: Record<string, string>;
 }
@@ -36,13 +38,15 @@ export const BRAND_THEMES: Record<string, BrandTheme> = {
     key: "arkode",
     name: "Arkode",
     tagline: "Centro de Novedades",
+    logo: "/brand/arkode-white.png",
     vars: {
-      "--brand": "221 83% 60%",
-      "--brand-soft": "199 89% 60%",
-      "--brand-foreground": "0 0% 100%",
-      "--blob-1": "221 83% 60%",
-      "--blob-2": "199 89% 60%",
-      "--blob-3": "262 83% 66%",
+      // Real Arkode palette: coral accent (#FF6C5D) over deep navy.
+      "--brand": "6 100% 68%",
+      "--brand-soft": "12 100% 73%",
+      "--brand-foreground": "36 50% 93%",
+      "--blob-1": "6 100% 68%",
+      "--blob-2": "12 100% 73%",
+      "--blob-3": "215 70% 40%",
     },
   },
   emerald: {

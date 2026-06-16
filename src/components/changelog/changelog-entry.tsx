@@ -62,7 +62,9 @@ export function ChangelogEntryNode({
             {entry.title}
           </h3>
         )}
-        <p className="mt-0.5 text-sm text-muted-foreground">{entry.summary}</p>
+        <p className="mt-0.5 font-description text-sm text-muted-foreground">
+          {entry.summary}
+        </p>
       </div>
 
       {/* tickets */}
