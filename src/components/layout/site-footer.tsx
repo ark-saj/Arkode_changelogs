@@ -1,11 +1,10 @@
 import { Database } from "lucide-react";
-import type { BrandTheme } from "@/lib/branding";
 
 export function SiteFooter({
   brand,
   dataSource,
 }: {
-  brand: BrandTheme;
+  brand: { name: string; tagline: string };
   dataSource: "supabase" | "mock";
 }) {
   return (

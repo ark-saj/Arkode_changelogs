@@ -6,8 +6,9 @@ import { MockChangelogRepository } from "@/lib/data/mock-repository";
  * the mock and Supabase repositories must satisfy them — the compiler enforces it.
  */
 export interface ChangelogRepository {
-  /** Everything the landing page needs: entries (sorted), categories, stats. */
-  getChangelog(): Promise<ChangelogData>;
+  /** Everything the landing page needs: entries (sorted), categories, stats.
+   *  `tenantSlug` selects which tenant's portal to read (Supabase backend). */
+  getChangelog(tenantSlug?: string): Promise<ChangelogData>;
 }
 
 /** True when real Supabase credentials are present in the environment. */

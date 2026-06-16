@@ -10,10 +10,10 @@ import type {
 } from "@/lib/types";
 import type { ChangelogRepository } from "@/lib/data/repository";
 import { computeStats, sortEntriesDesc } from "@/lib/data/compute-stats";
-import { getSupabaseClient } from "@/lib/supabase/client";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-/** Tenant slug whose portal we render. Fase 1 will derive this from the route. */
-const TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT ?? "conecta";
+/** Fallback tenant slug when the route doesn't pass one. */
+const DEFAULT_TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT ?? "conecta";
 
 /* ------------------------------------------------------------------ */
 /*  Raw row shapes (snake_case, as stored in Postgres).               */
@@ -140,30 +140,37 @@ function mapTenant(row: TenantRow): Tenant {
  * authenticated sessions — see supabase/migrations and §3.1 of docs/PLAN.md).
  */
 export class SupabaseChangelogRepository implements ChangelogRepository {
-  async getChangelog(): Promise<ChangelogData> {
-    const supabase = getSupabaseClient();
+  async getChangelog(tenantSlug?: string): Promise<ChangelogData> {
+    const slug = tenantSlug ?? DEFAULT_TENANT_SLUG;
+    // Read with the caller's session — RLS scopes rows to their tenant.
+    const supabase = await createSupabaseServerClient();
+
+    const categoriesRes = await supabase
+      .from("categories")
+      .select("*")
+      .order("sort_order");
+    if (categoriesRes.error) throw categoriesRes.error;
+    const categories = (categoriesRes.data as CategoryRow[]).map(mapCategory);
 
     const tenantRes = await supabase
       .from("tenants")
       .select("*")
-      .eq("slug", TENANT_SLUG)
-      .single();
+      .eq("slug", slug)
+      .maybeSingle();
     if (tenantRes.error) throw tenantRes.error;
+    if (!tenantRes.data) {
+      // Unknown / inaccessible tenant — return an empty, well-formed payload.
+      return { categories, entries: [], stats: computeStats([]), tenant: null };
+    }
     const tenant = mapTenant(tenantRes.data as TenantRow);
 
-    const [categoriesRes, changelogsRes] = await Promise.all([
-      supabase.from("categories").select("*").order("sort_order"),
-      supabase
-        .from("changelogs")
-        .select("*, tickets(*, screenshots(*))")
-        .eq("tenant_id", tenant.id)
-        .order("date", { ascending: false }),
-    ]);
-
-    if (categoriesRes.error) throw categoriesRes.error;
+    const changelogsRes = await supabase
+      .from("changelogs")
+      .select("*, tickets(*, screenshots(*))")
+      .eq("tenant_id", tenant.id)
+      .order("date", { ascending: false });
     if (changelogsRes.error) throw changelogsRes.error;
 
-    const categories = (categoriesRes.data as CategoryRow[]).map(mapCategory);
     const entries = sortEntriesDesc(
       (changelogsRes.data as ChangelogRow[]).map(mapEntry),
     );

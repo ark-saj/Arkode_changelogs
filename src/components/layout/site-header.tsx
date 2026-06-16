@@ -2,9 +2,22 @@ import Image from "next/image";
 import { Sparkles } from "lucide-react";
 
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import type { BrandTheme } from "@/lib/branding";
+import { LogoutButton } from "@/components/layout/logout-button";
 
-export function SiteHeader({ brand }: { brand: BrandTheme }) {
+/** Minimal branding the header needs — satisfied by a tenant or a brand theme. */
+export interface HeaderBrand {
+  name: string;
+  tagline: string;
+  logo?: string;
+}
+
+export function SiteHeader({
+  brand,
+  showLogout = false,
+}: {
+  brand: HeaderBrand;
+  showLogout?: boolean;
+}) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/40 bg-background/70 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between gap-4">
@@ -36,7 +49,10 @@ export function SiteHeader({ brand }: { brand: BrandTheme }) {
           )}
         </a>
 
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          {showLogout && <LogoutButton />}
+        </div>
       </div>
     </header>
   );
