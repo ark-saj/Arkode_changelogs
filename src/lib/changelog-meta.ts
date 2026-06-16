@@ -1,3 +1,4 @@
+import { Heart, Lightbulb, ThumbsUp, type LucideIcon } from "lucide-react";
 import type { ReactionCounts, TicketStatus } from "@/lib/types";
 
 /**
@@ -41,13 +42,13 @@ export const STATUS_ORDER: TicketStatus[] = [
   "optimization",
 ];
 
-/** Reaction definitions, in display order. */
+/** Reaction definitions, in display order. Icons (no emoji) for brand consistency. */
 export const REACTION_META: {
   key: keyof ReactionCounts;
-  emoji: string;
+  icon: LucideIcon;
   label: string;
 }[] = [
-  { key: "helped", emoji: "👍", label: "Me ayudó" },
-  { key: "love", emoji: "❤️", label: "Excelente mejora" },
-  { key: "suggestion", emoji: "💡", label: "Tengo sugerencias" },
+  { key: "helped", icon: ThumbsUp, label: "Me ayudó" },
+  { key: "love", icon: Heart, label: "Excelente mejora" },
+  { key: "suggestion", icon: Lightbulb, label: "Tengo sugerencias" },
 ];

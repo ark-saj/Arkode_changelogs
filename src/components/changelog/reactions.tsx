@@ -46,7 +46,7 @@ export function Reactions({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {REACTION_META.map(({ key, emoji, label }) => {
+      {REACTION_META.map(({ key, icon: Icon, label }) => {
         const isActive = Boolean(active[key]);
         const value = counts[key] + (isActive ? 1 : 0);
         return (
@@ -67,9 +67,14 @@ export function Reactions({
               initial={{ scale: 0.6 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 500, damping: 15 }}
-              className="text-base leading-none"
+              className="leading-none"
             >
-              {emoji}
+              <Icon
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  isActive && "fill-current text-brand",
+                )}
+              />
             </motion.span>
             <span className="hidden sm:inline">{label}</span>
             <span className="tabular-nums font-medium text-foreground/80">

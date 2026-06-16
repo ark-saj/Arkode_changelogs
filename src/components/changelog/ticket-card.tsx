@@ -25,6 +25,17 @@ export function TicketCard({
   const [open, setOpen] = React.useState(defaultOpen);
   const detailId = `ticket-${ticket.code}-details`;
 
+  // Sections present in this ticket — used for the in-card jump index.
+  const sections = [
+    { id: "what", label: "Qué cambió" },
+    { id: "why", label: "Por qué" },
+    { id: "where", label: "Dónde" },
+    ...(ticket.beforeAfter ? [{ id: "before", label: "Antes/Después" }] : []),
+    ...(ticket.screenshots.length > 0 ? [{ id: "shots", label: "Capturas" }] : []),
+  ];
+  // Only long tickets (with before/after or screenshots) need the navigation.
+  const showIndex = Boolean(ticket.beforeAfter) || ticket.screenshots.length > 0;
+
   return (
     <div
       id={`t-${ticket.code}`}
@@ -97,23 +108,32 @@ export function TicketCard({
             className="overflow-hidden"
           >
             <div className="space-y-5 border-t border-border/50 p-5">
-              <Section icon={<Wand2 className="h-4 w-4" />} title="¿Qué cambió?">
+              {showIndex && (
+                <TicketIndex detailId={detailId} sections={sections} />
+              )}
+
+              <Section
+                id={`${detailId}-what`}
+                icon={<Wand2 className="h-4 w-4" />}
+                title="¿Qué cambió?"
+              >
                 {ticket.whatChanged}
               </Section>
               <Section
+                id={`${detailId}-why`}
                 icon={<Lightbulb className="h-4 w-4" />}
                 title="¿Por qué es útil?"
               >
                 {ticket.whyUseful}
               </Section>
 
-              <div>
+              <div id={`${detailId}-where`} className="scroll-mt-52">
                 <SectionLabel>¿Dónde lo encuentro?</SectionLabel>
                 <WhereToFind path={ticket.whereToFind} />
               </div>
 
               {ticket.beforeAfter && (
-                <div>
+                <div id={`${detailId}-before`} className="scroll-mt-52">
                   <SectionLabel>Antes y después</SectionLabel>
                   <BeforeAfterSlider data={ticket.beforeAfter} />
                   <p className="mt-2 text-xs text-muted-foreground">
@@ -124,7 +144,7 @@ export function TicketCard({
               )}
 
               {ticket.screenshots.length > 0 && (
-                <div>
+                <div id={`${detailId}-shots`} className="scroll-mt-52">
                   <SectionLabel>Capturas</SectionLabel>
                   <ScreenshotGallery screenshots={ticket.screenshots} />
                 </div>
@@ -149,17 +169,48 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** In-card jump index for long tickets — anchors to each section. */
+function TicketIndex({
+  detailId,
+  sections,
+}: {
+  detailId: string;
+  sections: { id: string; label: string }[];
+}) {
+  const go = (id: string) => {
+    document
+      .getElementById(`${detailId}-${id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  return (
+    <nav aria-label="Secciones de este cambio" className="flex flex-wrap gap-1.5">
+      {sections.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          onClick={() => go(s.id)}
+          className="rounded-full border border-border/50 bg-muted/30 px-2.5 py-1 text-xs font-medium text-muted-foreground transition hover:border-brand/40 hover:text-brand"
+        >
+          {s.label}
+        </button>
+      ))}
+    </nav>
+  );
+}
+
 function Section({
+  id,
   icon,
   title,
   children,
 }: {
+  id?: string;
   icon: React.ReactNode;
   title: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex gap-3">
+    <div id={id} className="flex scroll-mt-52 gap-3">
       <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
         {icon}
       </span>
