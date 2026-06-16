@@ -1,7 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-// @ts-expect-error — plain .mjs helper, no types needed
 import { seedAuth } from "../scripts/seed-auth.mjs";
 
 /**
