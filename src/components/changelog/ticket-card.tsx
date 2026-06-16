@@ -52,7 +52,7 @@ export function TicketCard({
           <h4 className="font-display text-base font-semibold leading-snug tracking-tight">
             {ticket.title}
           </h4>
-          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-1 font-description text-sm leading-relaxed text-muted-foreground">
             {ticket.summary}
           </p>
         </div>
@@ -165,7 +165,7 @@ function Section({
       </span>
       <div>
         <p className="text-sm font-semibold">{title}</p>
-        <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-0.5 font-description text-sm leading-relaxed text-muted-foreground">
           {children}
         </p>
       </div>
