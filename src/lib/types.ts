@@ -104,9 +104,23 @@ export interface ChangelogStats {
   lastUpdate: string | null;
 }
 
+/** A company. Each tenant has its own portal, content and branding. */
+export interface Tenant {
+  id: string;
+  /** Routing key, e.g. "conecta". */
+  slug: string;
+  name: string;
+  tagline: string;
+  logo?: string;
+  /** CSS variable overrides for this tenant's branding (Fase 1). */
+  brand?: Record<string, string>;
+}
+
 /** Everything the landing page needs in a single fetch. */
 export interface ChangelogData {
   entries: ChangelogEntry[];
   categories: Category[];
   stats: ChangelogStats;
+  /** The tenant this data belongs to (null for the single-tenant mock). */
+  tenant?: Tenant | null;
 }

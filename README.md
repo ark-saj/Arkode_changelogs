@@ -106,22 +106,44 @@ src/
 
 ---
 
-## 🔌 Conectar Supabase (opcional)
+## 🔌 Supabase (multi-tenant)
 
-1. Crear un proyecto en [supabase.com](https://supabase.com).
-2. En **SQL Editor**, ejecutar [`supabase/schema.sql`](supabase/schema.sql)
-   (crea tablas `categories`, `changelogs`, `tickets`, `screenshots`, RLS de
-   solo-lectura y un seed de ejemplo).
-3. Definir las variables de entorno (en local en `.env.local`, en Railway/Vercel
-   en el panel del proyecto):
+El schema vive en [`supabase/migrations/`](supabase/migrations) (versionado) y el
+contenido de ejemplo en [`supabase/seed.sql`](supabase/seed.sql) — dos empresas
+ficticias (Conec-ta y Everban) con **datos aislados por tenant vía RLS**.
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
-   ```
+### Desarrollo local (Docker)
 
-4. Reiniciar la app. La fábrica detecta las credenciales y usa Supabase
-   automáticamente. El footer muestra "Conectado a Supabase".
+```bash
+npx supabase start          # levanta Postgres + API local (aplica migraciones + seed)
+npx supabase status -o env  # muestra URL y keys locales
+```
+
+Creá `.env.local` con las credenciales locales y el tenant a renderizar:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<ANON_KEY de supabase status>
+NEXT_PUBLIC_TENANT=conecta
+```
+
+`npm run dev` y el footer mostrará "Conectado a Supabase". Sin estas variables,
+la app usa los datos mock (cero config).
+
+### Test de aislamiento (gate)
+
+```bash
+npm test   # requiere supabase local corriendo
+```
+
+Verifica que un tenant **nunca** lee datos de otro (RLS por claim `tenant_id`).
+
+### Producción
+
+Crear un proyecto en [supabase.com](https://supabase.com), aplicar las
+migraciones (`npx supabase db push`) y definir `NEXT_PUBLIC_SUPABASE_URL` +
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` en el panel del host. La fábrica de datos detecta
+las credenciales y cambia de mock a Supabase sin tocar código.
 
 ---
 

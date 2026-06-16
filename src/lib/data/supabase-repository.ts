@@ -4,6 +4,7 @@ import type {
   ChangelogData,
   ChangelogEntry,
   Screenshot,
+  Tenant,
   Ticket,
   TicketStatus,
 } from "@/lib/types";
@@ -11,10 +12,21 @@ import type { ChangelogRepository } from "@/lib/data/repository";
 import { computeStats, sortEntriesDesc } from "@/lib/data/compute-stats";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
+/** Tenant slug whose portal we render. Fase 1 will derive this from the route. */
+const TENANT_SLUG = process.env.NEXT_PUBLIC_TENANT ?? "conecta";
+
 /* ------------------------------------------------------------------ */
 /*  Raw row shapes (snake_case, as stored in Postgres).               */
-/*  See supabase/schema.sql for the matching DDL.                     */
+/*  See supabase/migrations/* for the matching DDL.                   */
 /* ------------------------------------------------------------------ */
+interface TenantRow {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  logo: string | null;
+  brand: Record<string, string> | null;
+}
 interface CategoryRow {
   key: string;
   name: string;
@@ -111,21 +123,40 @@ function mapCategory(row: CategoryRow): Category {
   return { key: row.key, name: row.name, icon: row.icon };
 }
 
+function mapTenant(row: TenantRow): Tenant {
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: row.name,
+    tagline: row.tagline,
+    logo: row.logo ?? undefined,
+    brand: row.brand ?? undefined,
+  };
+}
+
 /**
- * Supabase-backed repository. Activated automatically by the factory when
- * credentials are present. Uses a single nested query to fetch the whole tree.
+ * Supabase-backed, tenant-scoped repository. Resolves the active tenant by slug,
+ * then reads only that tenant's changelogs (RLS enforces the same boundary for
+ * authenticated sessions — see supabase/migrations and §3.1 of docs/PLAN.md).
  */
 export class SupabaseChangelogRepository implements ChangelogRepository {
   async getChangelog(): Promise<ChangelogData> {
     const supabase = getSupabaseClient();
 
+    const tenantRes = await supabase
+      .from("tenants")
+      .select("*")
+      .eq("slug", TENANT_SLUG)
+      .single();
+    if (tenantRes.error) throw tenantRes.error;
+    const tenant = mapTenant(tenantRes.data as TenantRow);
+
     const [categoriesRes, changelogsRes] = await Promise.all([
       supabase.from("categories").select("*").order("sort_order"),
       supabase
         .from("changelogs")
-        .select(
-          "*, tickets(*, screenshots(*))",
-        )
+        .select("*, tickets(*, screenshots(*))")
+        .eq("tenant_id", tenant.id)
         .order("date", { ascending: false }),
     ]);
 
@@ -137,6 +168,6 @@ export class SupabaseChangelogRepository implements ChangelogRepository {
       (changelogsRes.data as ChangelogRow[]).map(mapEntry),
     );
 
-    return { categories, entries, stats: computeStats(entries) };
+    return { categories, entries, stats: computeStats(entries), tenant };
   }
 }
