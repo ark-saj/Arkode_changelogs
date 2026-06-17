@@ -107,10 +107,6 @@ export default function LoginPage() {
                 Las mejoras que implementamos para tu empresa, en un solo lugar.
                 Claras, visuales, al día.
               </p>
-              <div className="mt-7 flex gap-2">
-                <Chip>MULTIEMPRESA</Chip>
-                <Chip>SEGURO</Chip>
-              </div>
             </div>
 
             {/* right: login form */}
@@ -233,14 +229,6 @@ function ChromeRing({ className }: { className?: string }) {
         boxShadow: "0 30px 70px -20px rgba(0,0,0,0.7)",
       }}
     />
-  );
-}
-
-function Chip({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="rounded-md border border-white/15 px-2.5 py-1 font-mono text-[11px] tracking-wider text-ark-bone/60">
-      {children}
-    </span>
   );
 }
 
