@@ -96,3 +96,24 @@ export async function isMemberOf(slug: string): Promise<boolean> {
     .maybeSingle();
   return Boolean(membership);
 }
+
+/** Is the logged-in user an ADMIN of the tenant identified by `slug`? */
+export async function isTenantAdmin(slug: string): Promise<boolean> {
+  if (!hasSupabaseCredentials()) return true; // mock: open
+
+  const supabase = await createSupabaseServerClient();
+  const { data: tenant } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (!tenant) return false;
+
+  const { data: membership } = await supabase
+    .from("tenant_users")
+    .select("role")
+    .eq("tenant_id", tenant.id)
+    .eq("role", "admin")
+    .maybeSingle();
+  return Boolean(membership);
+}

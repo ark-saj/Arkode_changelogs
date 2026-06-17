@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Sparkles } from "lucide-react";
+import { Settings, Sparkles } from "lucide-react";
 
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { LogoutButton } from "@/components/layout/logout-button";
@@ -14,9 +14,12 @@ export interface HeaderBrand {
 export function SiteHeader({
   brand,
   showLogout = false,
+  settingsHref,
 }: {
   brand: HeaderBrand;
   showLogout?: boolean;
+  /** When set (tenant admins), shows a link to the settings page. */
+  settingsHref?: string;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/40 bg-background/70 backdrop-blur-xl">
@@ -50,6 +53,16 @@ export function SiteHeader({
         </a>
 
         <div className="flex items-center gap-2">
+          {settingsHref && (
+            <a
+              href={settingsHref}
+              aria-label="Configuración"
+              title="Configuración"
+              className="grid h-10 w-10 place-items-center rounded-full glass text-foreground transition hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+            >
+              <Settings className="h-[18px] w-[18px]" />
+            </a>
+          )}
           <ThemeToggle />
           {showLogout && <LogoutButton />}
         </div>
