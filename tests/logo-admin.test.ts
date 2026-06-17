@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { seedAuth } from "../scripts/seed-auth.mjs";
@@ -38,6 +38,14 @@ async function signIn(email: string, password: string): Promise<SupabaseClient> 
 
 beforeAll(async () => {
   await seedAuth();
+});
+
+afterAll(async () => {
+  // Restore clean state: these tests mutate conecta's logo, which would
+  // otherwise leave a broken image in the dev portal until the next db reset.
+  const c = await signIn("admin@conecta.test", "demo12345");
+  await c.from("tenants").update({ logo: null }).eq("id", CONECTA);
+  await c.storage.from("tenant-logos").remove([`${CONECTA}/logo.png`]);
 });
 
 describe("tenant logo — admin-only authorization", () => {
