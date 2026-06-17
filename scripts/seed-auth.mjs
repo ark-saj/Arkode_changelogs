@@ -9,8 +9,9 @@ const SERVICE_ROLE =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU";
 
 export const DEMO_USERS = [
-  { email: "admin@conecta.test", password: "demo12345", tenantSlug: "conecta" },
-  { email: "admin@everban.test", password: "demo12345", tenantSlug: "everban" },
+  { email: "admin@conecta.test", password: "demo12345", tenantSlug: "conecta", role: "admin" },
+  { email: "admin@everban.test", password: "demo12345", tenantSlug: "everban", role: "admin" },
+  { email: "member@conecta.test", password: "demo12345", tenantSlug: "conecta", role: "member" },
 ];
 
 export async function seedAuth() {
@@ -44,12 +45,12 @@ export async function seedAuth() {
     const { error: mErr } = await admin
       .from("tenant_users")
       .upsert(
-        { user_id: userId, tenant_id: tenant.id, role: "admin" },
+        { user_id: userId, tenant_id: tenant.id, role: u.role ?? "member" },
         { onConflict: "user_id,tenant_id" },
       );
     if (mErr) throw new Error(`membership ${u.email}: ${mErr.message}`);
 
-    console.log(`✓ ${u.email} → ${u.tenantSlug}`);
+    console.log(`✓ ${u.email} → ${u.tenantSlug} (${u.role ?? "member"})`);
   }
 }
 
