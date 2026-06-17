@@ -8,6 +8,7 @@ import { activeDataSource, hasSupabaseCredentials } from "@/lib/data/repository"
 import {
   getUserTenantSlug,
   isMemberOf,
+  isTenantAdmin,
   resolveTenant,
 } from "@/lib/data/tenant-context";
 
@@ -38,6 +39,9 @@ export default async function TenantLayout({
     }
   }
 
+  // Admins get the settings link (edit company logo, etc.).
+  const isAdmin = await isTenantAdmin(slug);
+
   return (
     <div
       id="top"
@@ -45,7 +49,11 @@ export default async function TenantLayout({
       className="relative flex min-h-screen flex-col"
     >
       <LiquidBackground />
-      <SiteHeader brand={tenant} showLogout={hasSupabaseCredentials()} />
+      <SiteHeader
+        brand={tenant}
+        showLogout={hasSupabaseCredentials()}
+        settingsHref={isAdmin ? `/${slug}/configuracion` : undefined}
+      />
       <main className="flex-1">{children}</main>
       <SiteFooter brand={tenant} dataSource={activeDataSource()} />
     </div>
