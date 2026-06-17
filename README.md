@@ -45,8 +45,8 @@ dinámico por empresa.
 ## 🚀 Desarrollo local
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 # http://localhost:3000
 ```
 
@@ -55,9 +55,9 @@ No requiere ninguna variable de entorno: arranca con datos de demostración.
 Otros scripts:
 
 ```bash
-npm run build      # build de producción
-npm run start      # servidor de producción
-npm run typecheck  # chequeo de tipos
+pnpm build      # build de producción
+pnpm start      # servidor de producción
+pnpm typecheck  # chequeo de tipos
 ```
 
 ---
@@ -116,7 +116,7 @@ ficticias (Conec-ta y Everban) con **datos aislados por tenant vía RLS**.
 
 ```bash
 npx supabase start          # levanta Postgres + API local (aplica migraciones + seed)
-npm run db:seed-auth        # crea los usuarios demo y los mapea a su empresa
+pnpm db:seed-auth        # crea los usuarios demo y los mapea a su empresa
 npx supabase status -o env  # muestra URL y keys locales
 ```
 
@@ -127,7 +127,7 @@ NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<ANON_KEY de supabase status>
 ```
 
-`npm run dev` y entrá por **`/login`**. El flujo: login → te redirige al portal de
+`pnpm dev` y entrá por **`/login`**. El flujo: login → te redirige al portal de
 **tu** empresa (`/[empresa]`), con su branding (color, logo) y solo sus changelogs.
 
 Usuarios demo (sembrados por `db:seed-auth`):
@@ -142,7 +142,7 @@ Usuarios demo (sembrados por `db:seed-auth`):
 ### Tests de aislamiento (gate)
 
 ```bash
-npm test   # requiere supabase local corriendo + npm run db:seed-auth
+pnpm test   # requiere supabase local corriendo + pnpm db:seed-auth
 ```
 
 Verifica que un tenant **nunca** lee datos de otro, por dos caminos de RLS: claim
@@ -163,8 +163,8 @@ las credenciales y cambia de mock a Supabase sin tocar código.
 2. En [railway.app](https://railway.app): **New Project → Deploy from GitHub repo**
    y elegí este repo.
 3. Railway detecta Next.js con Nixpacks y usa la config de [`railway.json`](railway.json):
-   - build: `npm run build`
-   - start: `npm run start` (Next escucha automáticamente en `$PORT`)
+   - build: `pnpm build`
+   - start: `pnpm start` (Next escucha automáticamente en `$PORT`)
 4. (Opcional) En **Variables**, agregá las de Supabase y/o `NEXT_PUBLIC_BRAND`.
 5. Railway genera el dominio público. ✅
 
