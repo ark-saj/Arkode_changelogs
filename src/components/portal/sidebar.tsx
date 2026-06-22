@@ -76,17 +76,7 @@ function NavItem({
       )}
       <span className="shrink-0">{icon}</span>
       {!collapsed && (
-        <>
-          <span className="min-w-0 flex-1 truncate">{label}</span>
-          <span
-            className={cn(
-              "shrink-0 font-mono text-[10.5px] tabular-nums tracking-[0.08em]",
-              active ? "text-coral-deep" : "text-faint",
-            )}
-          >
-            {count}
-          </span>
-        </>
+        <span className="min-w-0 flex-1 truncate">{label}</span>
       )}
     </button>
   );

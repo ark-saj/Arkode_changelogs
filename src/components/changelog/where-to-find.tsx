@@ -30,8 +30,8 @@ export function WhereToFind({
           <MSpan key={i} variants={slideUp} className="flex items-center gap-2">
             <span
               className={cn(
-                "font-mono text-[12px] uppercase tracking-[0.08em]",
-                last ? "font-medium text-ink" : "text-mute",
+                "text-sm",
+                last ? "font-semibold text-ink" : "text-mute",
               )}
             >
               {step}

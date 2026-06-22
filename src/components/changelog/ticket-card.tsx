@@ -10,7 +10,6 @@ import { ScreenshotGallery } from "@/components/changelog/screenshot-gallery";
 import { BeforeAfterSlider } from "@/components/changelog/before-after-slider";
 import { CategoryIcon } from "@/components/changelog/category-icon";
 import { PixelIcon } from "@/components/mosaic/pixel-icon";
-import { ArrowCircle } from "@/components/mosaic/arrow-circle";
 import { MDiv } from "@/components/motion/motion-safe";
 import { expandCollapse } from "@/components/motion/variants";
 import type { Category, Ticket } from "@/lib/types";
@@ -42,16 +41,13 @@ export function TicketCard({
         className="flex w-full items-start gap-4 p-6 text-left"
       >
         <div className="min-w-0 flex-1">
-          <div className="mb-2.5 flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-mute">
-              {ticket.code}
-            </span>
+          <div className="mb-2.5">
             <StatusBadge status={ticket.status} />
           </div>
-          <h4 className="font-sans text-base font-semibold leading-snug tracking-[-0.02em] text-ink">
+          <h4 className="font-sans text-[17px] font-semibold leading-snug tracking-[-0.02em] text-ink">
             {ticket.title}
           </h4>
-          <p className="mt-1.5 font-sans text-sm leading-relaxed text-mute">
+          <p className="mt-1.5 font-sans text-[15px] leading-relaxed text-ink-soft">
             {ticket.summary}
           </p>
         </div>
@@ -67,8 +63,8 @@ export function TicketCard({
         </span>
       </button>
 
-      {/* Footer meta row — quiet mono, neutral icons */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-6 pb-5 font-mono text-[11px] uppercase tracking-[0.1em] text-mute">
+      {/* Footer meta row — calm, plain text (no mono noise) */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-6 pb-5 text-[13px] text-mute">
         {category && (
           <span className="inline-flex items-center gap-1.5">
             <CategoryIcon name={category.icon} unit={3} />
@@ -80,12 +76,6 @@ export function TicketCard({
             <PixelIcon name="doc" unit={2.5} weight="fine" aria-hidden />
             {ticket.screenshots.length}{" "}
             {ticket.screenshots.length === 1 ? "captura" : "capturas"}
-          </span>
-        )}
-        {!open && (
-          <span className="ml-auto inline-flex items-center gap-2 font-medium text-ink-soft">
-            Ver detalles
-            <ArrowCircle size={22} />
           </span>
         )}
       </div>
@@ -120,7 +110,7 @@ export function TicketCard({
                   <div className="mt-3">
                     <BeforeAfterSlider data={ticket.beforeAfter} />
                   </div>
-                  <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.1em] text-mute">
+                  <p className="mt-2 text-xs text-mute">
                     Arrastrá el control para comparar. {ticket.beforeAfter.beforeCaption} →{" "}
                     {ticket.beforeAfter.afterCaption}.
                   </p>
@@ -147,9 +137,9 @@ export function TicketCard({
   );
 }
 
-/** Mono sub-head divider: label + trailing hairline rule (.sub-h from globals). */
+/** Plain, friendly section label — readable, not technical. */
 function SubHead({ children }: { children: React.ReactNode }) {
-  return <p className="sub-h">{children}</p>;
+  return <p className="text-[15px] font-semibold text-ink">{children}</p>;
 }
 
 function DetailSection({
