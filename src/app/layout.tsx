@@ -1,24 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Inter, Newsreader } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
-import { ThemeProvider } from "@/components/layout/theme-provider";
 
-// Geist = Arkode brand workhorse (display, headings, UI).
+// Geist = Arkode brand workhorse (display, headings, UI, body).
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
-// Geist Mono = badges / codes / numeric labels.
+// Geist Mono = eyebrows / labels / codes / numeric metrics.
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
-  display: "swap",
-});
-// Inter = kept on purpose for changelog DESCRIPTIONS (clean, high legibility).
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-// Newsreader italic = Arkode editorial accent.
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-newsreader",
-  style: ["italic", "normal"],
   display: "swap",
 });
 
@@ -35,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#001C43",
+  themeColor: "#FAF8F3",
 };
 
 export default function RootLayout({
@@ -44,21 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="es"
-      suppressHydrationWarning
-      className={`${geist.variable} ${geistMono.variable} ${inter.variable} ${newsreader.variable}`}
-    >
-      <body className="font-sans">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+    <html lang="es" className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="bg-canvas font-sans text-ink antialiased">{children}</body>
     </html>
   );
 }

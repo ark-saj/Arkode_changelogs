@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
 
+import { MSpan } from "@/components/motion/motion-safe";
 import { REACTION_META } from "@/lib/changelog-meta";
 import type { ReactionCounts } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -56,30 +56,28 @@ export function Reactions({
             onClick={() => toggle(key)}
             aria-pressed={isActive}
             className={cn(
-              "group inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-all",
+              "inline-flex items-center gap-2 rounded-md9 border px-3 py-1.5 text-sm transition-colors",
               isActive
-                ? "border-brand/50 bg-brand/10 text-foreground"
-                : "border-border/60 bg-muted/40 text-muted-foreground hover:border-brand/40 hover:text-foreground",
+                ? "border-coral bg-coral/[0.12] text-coral-deep"
+                : "border-line-2 bg-canvas text-ink-soft hover:border-coral/40 hover:text-coral-deep",
             )}
           >
-            <motion.span
+            <MSpan
               key={`${key}-${isActive}`}
               initial={{ scale: 0.6 }}
-              animate={{ scale: 1 }}
+              animate={{ scale: isActive ? [1, 1.35, 1] : 1 }}
               transition={{ type: "spring", stiffness: 500, damping: 15 }}
               className="leading-none"
             >
               <Icon
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  isActive && "fill-current text-brand",
+                  isActive && "fill-current",
                 )}
               />
-            </motion.span>
+            </MSpan>
             <span className="hidden sm:inline">{label}</span>
-            <span className="tabular-nums font-medium text-foreground/80">
-              {value}
-            </span>
+            <span className="font-mono text-xs tabular-nums">{value}</span>
           </button>
         );
       })}

@@ -1,10 +1,18 @@
+"use client";
+
+import { AnimatePresence } from "framer-motion";
 import { ChangelogEntryNode } from "@/components/changelog/changelog-entry";
 import { EmptyState } from "@/components/changelog/empty-state";
+import { MDiv } from "@/components/motion/motion-safe";
+import { slideUp, staggerContainer } from "@/components/motion/variants";
 import type { Category, ChangelogEntry } from "@/lib/types";
 
 /**
- * Vertical timeline with a translucent central rail. Entries are assumed to be
+ * Vertical timeline with a 1px hairline rail. Entries are assumed to be
  * pre-sorted (newest first); the first one is flagged as the latest release.
+ * Each release is wrapped so a filter change reflows + staggers smoothly
+ * (AnimatePresence + layout), and each node carries a stable `id="rel-<date>"`
+ * anchor for the TOC / scroll-spy.
  */
 export function Timeline({
   entries,
@@ -19,21 +27,36 @@ export function Timeline({
 
   return (
     <div className="relative">
-      {/* translucent rail */}
+      {/* hairline rail */}
       <div
         aria-hidden
-        className="absolute left-[21px] top-2 h-full w-px bg-gradient-to-b from-brand/50 via-border to-transparent sm:left-[29px]"
+        className="absolute left-[19px] top-2 h-full w-px bg-line sm:left-[27px]"
       />
-      <div className="space-y-12">
-        {entries.map((entry, i) => (
-          <ChangelogEntryNode
-            key={entry.id}
-            entry={entry}
-            categoriesByKey={categoriesByKey}
-            isLatest={i === 0}
-          />
-        ))}
-      </div>
+      <MDiv
+        className="space-y-12"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
+        <AnimatePresence mode="popLayout" initial={false}>
+          {entries.map((entry, i) => (
+            <MDiv
+              key={entry.id}
+              layout
+              variants={slideUp}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              <ChangelogEntryNode
+                entry={entry}
+                categoriesByKey={categoriesByKey}
+                isLatest={i === 0}
+              />
+            </MDiv>
+          ))}
+        </AnimatePresence>
+      </MDiv>
     </div>
   );
 }

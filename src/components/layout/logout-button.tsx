@@ -21,7 +21,7 @@ export function LogoutButton() {
       onClick={onLogout}
       aria-label="Cerrar sesión"
       title="Cerrar sesión"
-      className="grid h-10 w-10 place-items-center rounded-full glass text-foreground transition hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+      className="grid h-9 w-9 place-items-center rounded-md9 border border-line-2 text-ink transition hover:-translate-y-px hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/30"
     >
       <LogOut className="h-[18px] w-[18px]" />
     </button>

@@ -7,6 +7,8 @@ import { SearchBar } from "@/components/changelog/search-bar";
 import { FilterBar } from "@/components/changelog/filter-bar";
 import { Highlights } from "@/components/changelog/highlights";
 import { Timeline } from "@/components/changelog/timeline";
+import { Section } from "@/components/mosaic/section";
+import { Eyebrow } from "@/components/mosaic/eyebrow";
 import type {
   Category,
   ChangelogData,
@@ -90,47 +92,78 @@ export function ChangelogExplorer({ data }: { data: ChangelogData }) {
     selectedStatuses.size > 0;
 
   return (
-    <div className="space-y-12">
+    <div>
       {/* KPIs */}
-      <KpiDashboard stats={data.stats} />
+      <Section tone="canvas">
+        <div className="sec-inner">
+          <Eyebrow num="01">Resumen</Eyebrow>
+          <div className="mt-8">
+            <KpiDashboard stats={data.stats} />
+          </div>
+        </div>
+      </Section>
 
       {/* Controls */}
-      <div className="sticky top-[4.5rem] z-30 space-y-4 rounded-3xl glass glass-highlight p-4 sm:p-5">
-        <SearchBar value={query} onChange={setQuery} resultCount={resultCount} />
-        <FilterBar
-          categories={data.categories}
-          selectedCategories={selectedCategories}
-          selectedStatuses={selectedStatuses}
-          onToggleCategory={(key) =>
-            setSelectedCategories((s) => toggle(s, key))
-          }
-          onToggleStatus={(status) =>
-            setSelectedStatuses((s) => toggle(s, status))
-          }
-          onClear={() => {
-            setSelectedCategories(new Set());
-            setSelectedStatuses(new Set());
-            setQuery("");
-          }}
-        />
+      <div className="sticky top-[60px] z-30 border-y border-line bg-canvas/85 backdrop-blur-md">
+        <div className="sec-inner space-y-4 px-6 py-5">
+          <SearchBar
+            value={query}
+            onChange={setQuery}
+            resultCount={resultCount}
+          />
+          <FilterBar
+            categories={data.categories}
+            selectedCategories={selectedCategories}
+            selectedStatuses={selectedStatuses}
+            onToggleCategory={(key) =>
+              setSelectedCategories((s) => toggle(s, key))
+            }
+            onToggleStatus={(status) =>
+              setSelectedStatuses((s) => toggle(s, status))
+            }
+            onClear={() => {
+              setSelectedCategories(new Set());
+              setSelectedStatuses(new Set());
+              setQuery("");
+            }}
+          />
+        </div>
       </div>
 
       {/* Highlights — only when not actively searching, to keep focus */}
       {!hasQueryOrFilters && (
-        <Highlights tickets={featured} categoriesByKey={categoriesByKey} />
-      )}
-
-      {/* Result summary while filtering */}
-      {hasQueryOrFilters && (
-        <p className="text-sm text-muted-foreground">
-          {resultCount === 0
-            ? "No encontramos novedades con esos criterios."
-            : `Mostrando ${pluralize(resultCount, "novedad", "novedades")}.`}
-        </p>
+        <Section tone="bone">
+          <div className="sec-inner">
+            <Eyebrow num="02">Destacados</Eyebrow>
+            <div className="mt-8">
+              <Highlights
+                tickets={featured}
+                categoriesByKey={categoriesByKey}
+              />
+            </div>
+          </div>
+        </Section>
       )}
 
       {/* Timeline */}
-      <Timeline entries={filtered} categoriesByKey={categoriesByKey} />
+      <Section tone="canvas">
+        <div className="sec-inner">
+          <Eyebrow num="03">Línea de tiempo</Eyebrow>
+
+          {/* Result summary while filtering */}
+          {hasQueryOrFilters && (
+            <p className="mt-4 text-sm text-mute">
+              {resultCount === 0
+                ? "No encontramos novedades con esos criterios."
+                : `Mostrando ${pluralize(resultCount, "novedad", "novedades")}.`}
+            </p>
+          )}
+
+          <div className="mt-8">
+            <Timeline entries={filtered} categoriesByKey={categoriesByKey} />
+          </div>
+        </div>
+      </Section>
     </div>
   );
 }

@@ -1,9 +1,13 @@
-import { ChevronRight, MapPin } from "lucide-react";
+"use client";
+
+import { MDiv, MSpan } from "@/components/motion/motion-safe";
+import { slideUp, staggerContainer } from "@/components/motion/variants";
 import { cn } from "@/lib/utils";
 
 /**
- * "¿Dónde lo encuentro?" — renders a breadcrumb route the user can follow inside
- * Odoo, e.g. CRM › Oportunidades › Crear oportunidad.
+ * "¿Dónde lo encuentro?" — a quiet inline route the user follows inside Odoo,
+ * e.g. INVENTARIO › RECEPCIONES. Mono, neutral separators, last step in ink.
+ * No box, no accent: the calm Mistral breadcrumb. Stagger-in, reduced-motion-safe.
  */
 export function WhereToFind({
   path,
@@ -13,30 +17,33 @@ export function WhereToFind({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "flex flex-wrap items-center gap-1.5 rounded-2xl border border-border/60 bg-muted/40 px-3 py-2.5",
-        className,
-      )}
+    <MDiv
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.4 }}
+      className={cn("flex flex-wrap items-center gap-x-2 gap-y-1", className)}
     >
-      <MapPin className="mr-1 h-4 w-4 shrink-0 text-brand" />
-      {path.map((step, i) => (
-        <span key={i} className="flex items-center gap-1.5">
-          <span
-            className={cn(
-              "text-sm",
-              i === path.length - 1
-                ? "font-semibold text-foreground"
-                : "text-muted-foreground",
+      {path.map((step, i) => {
+        const last = i === path.length - 1;
+        return (
+          <MSpan key={i} variants={slideUp} className="flex items-center gap-2">
+            <span
+              className={cn(
+                "font-mono text-[12px] uppercase tracking-[0.08em]",
+                last ? "font-medium text-ink" : "text-mute",
+              )}
+            >
+              {step}
+            </span>
+            {!last && (
+              <span aria-hidden className="text-faint">
+                ›
+              </span>
             )}
-          >
-            {step}
-          </span>
-          {i < path.length - 1 && (
-            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
-          )}
-        </span>
-      ))}
-    </div>
+          </MSpan>
+        );
+      })}
+    </MDiv>
   );
 }

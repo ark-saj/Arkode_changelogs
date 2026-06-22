@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:seed-auth": "node scripts/seed-auth.mjs"
+    "db:seed-auth": "node scripts/seed-auth.mjs",
+    "optimize:media": "node scripts/optimize-media.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",

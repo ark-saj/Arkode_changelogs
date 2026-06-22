@@ -38,6 +38,8 @@ interface ScreenshotRow {
   caption: string;
   variant: Screenshot["variant"] | null;
   url: string | null;
+  kind: Screenshot["kind"] | null;
+  poster: string | null;
   seed: number | null;
   sort_order: number;
 }
@@ -75,6 +77,8 @@ function mapScreenshot(row: ScreenshotRow): Screenshot {
     caption: row.caption,
     variant: row.variant ?? undefined,
     url: row.url ?? undefined,
+    kind: row.kind ?? undefined,
+    poster: row.poster ?? undefined,
     seed: row.seed ?? undefined,
   };
 }
