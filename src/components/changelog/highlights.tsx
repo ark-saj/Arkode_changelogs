@@ -1,13 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowUpRight, Star } from "lucide-react";
-
+import { Eyebrow } from "@/components/mosaic/eyebrow";
+import { PixelCard } from "@/components/mosaic/pixel-card";
+import type { PixelIconName } from "@/components/mosaic/pixel-icon";
 import { StatusBadge } from "@/components/changelog/status-badge";
-import { CategoryIcon } from "@/components/changelog/category-icon";
+import { MDiv } from "@/components/motion/motion-safe";
+import { slideUp, staggerContainer } from "@/components/motion/variants";
 import type { Category, Ticket } from "@/lib/types";
 
-/** "Novedades más importantes" — featured tickets as a quick-access grid. */
+/* Map stored category icon names (legacy Lucide names) to Mosaic pixel sprites.
+   Mirrors CategoryIcon's mapping; falls back to `cube`. */
+const CATEGORY_SPRITE: Record<string, PixelIconName> = {
+  UserRound: "user",
+  ShoppingCart: "money",
+  Boxes: "cube",
+  Truck: "truck",
+  Briefcase: "brief",
+  ReceiptText: "doc",
+  Factory: "factory",
+  Database: "database",
+};
+
+/** "Novedades más importantes" — featured tickets as a quick-access PixelCard grid. */
 export function Highlights({
   tickets,
   categoriesByKey,
@@ -19,52 +33,53 @@ export function Highlights({
 
   return (
     <section aria-labelledby="highlights-title">
-      <div className="mb-4 flex items-center gap-2">
-        <Star className="h-4 w-4 text-brand" />
-        <h2
-          id="highlights-title"
-          className="font-display text-lg font-semibold tracking-tight"
-        >
-          Novedades más importantes
-        </h2>
-      </div>
+      <Eyebrow num="01">Destacado</Eyebrow>
+      <h2
+        id="highlights-title"
+        className="mt-2 font-sans text-2xl font-semibold tracking-tight text-ink"
+      >
+        Novedades más importantes
+      </h2>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {tickets.map((ticket, i) => {
+      <MDiv
+        className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+      >
+        {tickets.map((ticket) => {
           const category = categoriesByKey[ticket.categoryKey];
+          const sprite = category
+            ? CATEGORY_SPRITE[category.icon] ?? "cube"
+            : "cube";
           return (
-            <motion.a
-              key={ticket.code}
-              href={`#t-${ticket.code}`}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.06 }}
-              className="group relative flex flex-col overflow-hidden rounded-3xl glass glass-highlight p-5 transition-all hover:-translate-y-1 hover:shadow-glass-lg"
-            >
-              <span className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand/20 blur-2xl transition-opacity group-hover:opacity-100" />
-              <div className="flex items-center justify-between">
-                <StatusBadge status={ticket.status} />
-                <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-brand" />
-              </div>
-              <h3 className="mt-3 font-display text-base font-semibold leading-snug tracking-tight">
-                {ticket.title}
-              </h3>
-              <p className="mt-1 line-clamp-2 font-description text-sm text-muted-foreground">
-                {ticket.summary}
-              </p>
-              {category && (
-                <span className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <CategoryIcon name={category.icon} className="h-3.5 w-3.5 text-brand" />
-                  {category.name}
-                  <span className="mx-1 opacity-40">·</span>
-                  <span className="font-mono">{ticket.code}</span>
+            <MDiv key={ticket.code} variants={slideUp} className="h-full">
+              <PixelCard
+                icon={sprite}
+                title={ticket.title}
+                href={`#t-${ticket.code}`}
+                meta={
+                  <span className="flex items-center gap-1.5">
+                    {category && (
+                      <>
+                        <span className="text-coral-deep">{category.name}</span>
+                        <span className="text-faint">·</span>
+                      </>
+                    )}
+                    <span>{ticket.code}</span>
+                  </span>
+                }
+              >
+                <span className="mb-2 inline-flex">
+                  <StatusBadge status={ticket.status} />
                 </span>
-              )}
-            </motion.a>
+                <span className="block line-clamp-2">{ticket.summary}</span>
+              </PixelCard>
+            </MDiv>
           );
         })}
-      </div>
+      </MDiv>
     </section>
   );
 }

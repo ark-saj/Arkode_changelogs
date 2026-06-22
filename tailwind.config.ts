@@ -2,7 +2,6 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 const config: Config = {
-  darkMode: "class",
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
@@ -12,51 +11,39 @@ const config: Config = {
     container: {
       center: true,
       padding: "1.5rem",
-      screens: { "2xl": "1200px" },
+      screens: { "2xl": "1280px" },
     },
     extend: {
+      transitionTimingFunction: {
+        ark: "cubic-bezier(0.22,0.68,0,1)",
+      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        brand: {
-          DEFAULT: "hsl(var(--brand))",
-          foreground: "hsl(var(--brand-foreground))",
-          soft: "hsl(var(--brand-soft))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        // Semantic status colors for changelog badges
+        // Mosaic palette — fixed Arkode coral, no per-tenant theming.
+        canvas: "#FAF8F3",
+        bone: { DEFAULT: "#F4ECDE", 2: "#EFE6D6" },
+        ink: { DEFAULT: "#001C43", soft: "#33405E" },
+        mute: "#6B7390",
+        faint: "#9AA1B6",
+        line: { DEFAULT: "#E4DECF", 2: "#D7CFBC" },
+        coral: { DEFAULT: "#FF6C5D", deep: "#E8503F" },
+        // Mosaic accents — illustration only (canvas, pixel icons, badge tints).
+        orange: "#FF8A3D",
+        crimson: "#C5362A",
+        blue: "#2A6FDB",
+        green: "#1F8A5B",
+        // Changelog status colors (muted mono badge tints come from changelog-meta).
         status: {
-          new: "hsl(var(--status-new))",
-          improvement: "hsl(var(--status-improvement))",
-          fix: "hsl(var(--status-fix))",
-          optimization: "hsl(var(--status-optimization))",
-        },
-        // Arkode platform palette (fixed brand colors, not tenant-themeable).
-        // Used by the Arkode-branded login; never repaints the tenant portal.
-        ark: {
-          coral: "#FF6C5D",
-          navy: "#001C43",
-          bone: "#F6EFE4",
-          n800: "#19213D",
-          n700: "#353E5C",
-          n600: "#6D758F",
-          n500: "#A1A7BB",
-          n400: "#D7DBE7",
-          n300: "#EDEFF5",
-          n200: "#F8FAFF",
+          new: "#E8503F",
+          improvement: "#2A6FDB",
+          fix: "#C5362A",
+          optimization: "#FF8A3D",
         },
       },
       borderRadius: {
+        sm6: "6px",
+        md9: "9px",
+        lg14: "14px",
+        // existing scale kept harmlessly
         "4xl": "2rem",
         "3xl": "1.5rem",
         "2xl": "1.25rem",
@@ -64,48 +51,25 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "var(--font-sans)", "sans-serif"],
-        // Changelog descriptions stay on Inter (kept on purpose).
-        description: ["var(--font-description)", "var(--font-sans)", "sans-serif"],
-        // Arkode editorial accent (Newsreader italic).
-        editorial: ["var(--font-editorial)", "Georgia", "serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        // Aliased to Geist so any leftover references stay on-brand.
+        display: ["var(--font-sans)", "system-ui", "sans-serif"],
+        description: ["var(--font-sans)", "system-ui", "sans-serif"],
+        editorial: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        glass: "0 8px 32px 0 rgba(15, 23, 42, 0.12)",
-        "glass-lg": "0 24px 64px -12px rgba(15, 23, 42, 0.28)",
-        glow: "0 0 60px -10px hsl(var(--brand) / 0.45)",
-      },
-      backdropBlur: {
-        xs: "2px",
+        e1: "0 1px 2px rgba(0,28,67,0.06)",
+        e2: "0 6px 16px -8px rgba(0,28,67,0.16)",
+        e3: "0 24px 50px -22px rgba(0,28,67,0.28)",
       },
       keyframes: {
         "fade-up": {
           from: { opacity: "0", transform: "translateY(16px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0px) translateX(0px) scale(1)" },
-          "50%": { transform: "translateY(-30px) translateX(20px) scale(1.08)" },
-        },
-        "float-slow": {
-          "0%, 100%": { transform: "translateY(0px) translateX(0px) scale(1)" },
-          "50%": { transform: "translateY(40px) translateX(-30px) scale(1.12)" },
-        },
-        shimmer: {
-          "100%": { transform: "translateX(100%)" },
-        },
-        "pulse-ring": {
-          "0%": { transform: "scale(0.95)", opacity: "0.6" },
-          "70%, 100%": { transform: "scale(1.6)", opacity: "0" },
-        },
       },
       animation: {
-        "fade-up": "fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
-        float: "float 18s ease-in-out infinite",
-        "float-slow": "float-slow 24s ease-in-out infinite",
-        shimmer: "shimmer 2s infinite",
-        "pulse-ring": "pulse-ring 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite",
+        "fade-up": "fade-up 0.6s cubic-bezier(0.22, 0.68, 0, 1) both",
       },
     },
   },

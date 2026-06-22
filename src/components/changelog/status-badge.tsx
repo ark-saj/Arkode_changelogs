@@ -12,8 +12,8 @@ export function StatusBadge({
 }) {
   const meta = STATUS_META[status];
   return (
-    <Badge className={cn(meta.badgeClass, className)}>
-      <span className={cn("h-1.5 w-1.5 rounded-full", meta.dotClass)} />
+    <Badge className={cn("border", meta.badgeClass, className)}>
+      <span className={cn("h-1.5 w-1.5 rounded-[1px]", meta.dotClass)} />
       {meta.label}
     </Badge>
   );

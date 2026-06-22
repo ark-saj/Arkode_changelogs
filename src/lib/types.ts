@@ -30,8 +30,12 @@ export interface Screenshot {
   caption: string;
   /** Visual style of the generated mockup. */
   variant?: "form" | "list" | "dashboard" | "kanban" | "report";
-  /** Optional real image URL. Takes precedence over the generated mockup. */
+  /** Optional real media URL (image or video). Takes precedence over the mockup. */
   url?: string;
+  /** Force media kind; otherwise inferred from the url extension (.mp4/.webm = video). */
+  kind?: "image" | "video";
+  /** Poster frame URL for a video (shown before it plays). */
+  poster?: string;
   seed?: number;
 }
 

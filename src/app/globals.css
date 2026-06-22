@@ -2,144 +2,371 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-  Design tokens.
-  Brand colors are intentionally driven by CSS custom properties so a single
-  company theme (see src/lib/branding.ts) can repaint the whole app at runtime.
-  Defaults below = "Conec-ta" (warm orange / amber).
-*/
+/* =========================================================================
+   Arkode Design System — Mosaic v1
+   Light Mosaic only. Fixed Arkode coral. No dark mode, no glass, no blobs.
+   Tokens mirror design-reference/arkode-tokens.css (hex), exposed both as
+   --ark-* (source of truth) and short Tailwind-friendly aliases.
+   ========================================================================= */
 @layer base {
   :root {
-    /* Typography — Geist is the Arkode brand workhorse (UI, headings, display).
-       Inter is kept ON PURPOSE for changelog descriptions (cleanest to read).
-       Newsreader italic = Arkode editorial accent. Geist Mono = badges/codes. */
-    --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
-    --font-display: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
-    --font-description: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
-    --font-editorial: var(--font-newsreader), "Newsreader", Georgia, serif;
-    --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    /* ---- fonts (loaded via next/font in layout.tsx) ---- */
+    --font-sans: var(--font-geist), "Geist", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", system-ui, sans-serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+      monospace;
 
-    /* Light theme */
-    --background: 40 33% 97%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 42%;
-    --border: 220 16% 88%;
-    --input: 220 16% 88%;
-    --ring: var(--brand);
+    /* ---- color · brand ---- */
+    --ark-coral: #ff6c5d; /* primary brand + single UI accent */
+    --ark-coral-deep: #e8503f; /* text-safe coral, hovers */
+    --ark-ink: #001c43; /* navy — primary text + dark surface */
+    --ark-bone: #f4ecde; /* warm secondary surface */
+    --ark-bone-2: #efe6d6;
+    --ark-canvas: #faf8f3; /* primary page background */
 
-    /* Brand (overridable per company) */
-    --brand: 24 94% 53%;
-    --brand-foreground: 0 0% 100%;
-    --brand-soft: 32 95% 62%;
+    /* ---- color · mosaic accents (illustration only) ---- */
+    --ark-orange: #ff8a3d;
+    --ark-crimson: #c5362a;
+    --ark-blue: #2a6fdb;
+    --ark-green: #1f8a5b;
 
-    /* Decorative liquid-glass blob glows */
-    --blob-1: 24 94% 53%;
-    --blob-2: 32 95% 62%;
-    --blob-3: 14 90% 58%;
+    /* ---- color · semantic ---- */
+    --ark-success: #1f8a5b;
+    --ark-warning: #e8503f;
+    --ark-info: #2a6fdb;
 
-    /* Status badge colors */
-    --status-new: 152 64% 42%;
-    --status-improvement: 217 91% 60%;
-    --status-fix: 350 84% 60%;
-    --status-optimization: 270 70% 62%;
+    /* ---- color · text ---- */
+    --ark-text: #001c43;
+    --ark-text-soft: #33405e;
+    --ark-text-muted: #6b7390;
+    --ark-text-faint: #9aa1b6;
 
-    --radius: 1rem;
-  }
+    /* ---- color · lines ---- */
+    --ark-line: #e4decf;
+    --ark-line-strong: #d7cfbc;
+    --ark-hair: rgba(0, 28, 67, 0.09);
 
-  .dark {
-    --background: 224 38% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 33% 11%;
-    --card-foreground: 210 40% 98%;
-    --muted: 222 24% 16%;
-    --muted-foreground: 215 18% 65%;
-    --border: 220 22% 22%;
-    --input: 220 22% 22%;
+    /* ---- type weights ---- */
+    --ark-w-regular: 400;
+    --ark-w-medium: 500;
+    --ark-w-semibold: 600;
 
-    --status-new: 152 60% 50%;
-    --status-improvement: 213 94% 68%;
-    --status-fix: 350 90% 66%;
-    --status-optimization: 270 80% 72%;
+    /* ---- spacing (4px base) ---- */
+    --ark-space-1: 4px;
+    --ark-space-2: 8px;
+    --ark-space-3: 12px;
+    --ark-space-4: 16px;
+    --ark-space-6: 24px;
+    --ark-space-8: 32px;
+    --ark-space-12: 48px;
+    --ark-space-16: 64px;
+    --ark-space-24: 96px;
+
+    /* ---- radius ---- */
+    --ark-r-sm: 6px; /* badges, tags */
+    --ark-r-md: 9px; /* buttons, inputs, rows */
+    --ark-r-lg: 14px; /* cards, panels, slides */
+
+    /* ---- elevation ---- */
+    --ark-e1: 0 1px 2px rgba(0, 28, 67, 0.06);
+    --ark-e2: 0 6px 16px -8px rgba(0, 28, 67, 0.16);
+    --ark-e3: 0 24px 50px -22px rgba(0, 28, 67, 0.28);
+
+    /* ---- motion ---- */
+    --ark-ease: cubic-bezier(0.22, 0.68, 0, 1);
+    --ark-dur-fast: 120ms;
+    --ark-dur-base: 200ms;
+    --ark-dur-slow: 320ms;
+
+    /* ---- grid ---- */
+    --ark-grid-cols: 6;
+    --ark-grid-base: 4px;
+    --ark-maxw: 1280px;
+
+    /* ---- short aliases consumed by utility classes below ---- */
+    --canvas: var(--ark-canvas);
+    --bone: var(--ark-bone);
+    --bone-2: var(--ark-bone-2);
+    --ink: var(--ark-ink);
+    --ink-soft: var(--ark-text-soft);
+    --mute: var(--ark-text-muted);
+    --faint: var(--ark-text-faint);
+    --line: var(--ark-line);
+    --line-2: var(--ark-line-strong);
+    --hair: var(--ark-hair);
+    --coral: var(--ark-coral);
+    --coral-deep: var(--ark-coral-deep);
+    --e1: var(--ark-e1);
+    --e2: var(--ark-e2);
+    --e3: var(--ark-e3);
+    --r-sm: var(--ark-r-sm);
+    --r-md: var(--ark-r-md);
+    --r-lg: var(--ark-r-lg);
+    --ease: var(--ark-ease);
+    --maxw: var(--ark-maxw);
   }
 }
 
+/* ------------------------------------------------------------------ */
+/*  Base element type                                                  */
+/* ------------------------------------------------------------------ */
 @layer base {
-  * {
-    @apply border-border;
-  }
   html {
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: var(--ark-w-regular);
+    line-height: 1.45;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-sans);
+    font-weight: var(--ark-w-semibold);
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+    color: var(--ink);
+  }
+  ::selection {
+    background: rgba(255, 108, 93, 0.18);
+    color: var(--ink);
   }
 }
 
 /* ------------------------------------------------------------------ */
-/*  Glassmorphism utilities                                            */
+/*  Mosaic utility classes                                             */
 /* ------------------------------------------------------------------ */
 @layer components {
-  .glass {
-    @apply border border-white/15 bg-white/60 backdrop-blur-xl;
-    box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.12);
+  /* Mono eyebrow / label */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mute);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
-  .dark .glass {
-    @apply border-white/10 bg-white/[0.06];
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  }
-
-  .glass-strong {
-    @apply border border-white/20 bg-white/75 backdrop-blur-2xl;
-    box-shadow: 0 24px 64px -12px rgba(15, 23, 42, 0.22);
-  }
-  .dark .glass-strong {
-    @apply border-white/10 bg-white/[0.08];
-    box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.55);
+  .eyebrow .num {
+    color: var(--coral-deep);
   }
 
-  .glass-panel {
-    @apply rounded-3xl glass;
-  }
-
-  /* Subtle top highlight that sells the "liquid glass" look */
-  .glass-highlight {
+  /* Section wrappers + tones */
+  .sec {
     position: relative;
-    overflow: hidden;
+    padding: var(--ark-space-24) var(--ark-space-6);
+    background: var(--canvas);
   }
-  .glass-highlight::before {
+  .sec-inner {
+    max-width: var(--maxw);
+    margin: 0 auto;
+  }
+  .sec.bone {
+    background: var(--bone);
+  }
+  .sec.ink {
+    background: var(--ink);
+    color: #f4ecde;
+  }
+  .sec.ink h1,
+  .sec.ink h2,
+  .sec.ink h3,
+  .sec.ink h4 {
+    color: #fff;
+  }
+  .sec.ink .eyebrow {
+    color: rgba(244, 236, 222, 0.66);
+  }
+  .sec.ink::after {
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.5),
-      rgba(255, 255, 255, 0) 40%
-    );
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    background-image: url(/grain.svg);
+    background-size: 160px 160px;
+    mix-blend-mode: overlay;
+    opacity: 0.5;
     pointer-events: none;
   }
 
-  .brand-gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      120deg,
-      hsl(var(--brand)),
-      hsl(var(--brand-soft))
-    );
+  /* Sub-head divider: mono label + trailing hairline rule */
+  .sub-h {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--mute);
+  }
+  .sub-h::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: var(--r-md);
+    border: 1px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: var(--ark-w-medium);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--ark-dur-base) var(--ease),
+      border-color var(--ark-dur-base) var(--ease),
+      transform var(--ark-dur-fast) var(--ease),
+      box-shadow var(--ark-dur-base) var(--ease);
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .btn-coral {
+    background: var(--coral);
+    color: #fff;
+  }
+  .btn-coral:hover {
+    background: var(--coral-deep);
+  }
+  .btn-dark {
+    background: var(--ink);
+    color: #fff;
+  }
+  .btn-dark:hover {
+    background: #0a2a5c;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--line-2);
+  }
+  .btn-ghost:hover {
+    background: var(--bone);
+  }
+
+  /* Badges (mono tinted; status tints come from changelog-meta) */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border-radius: var(--r-sm);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: var(--bone);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .badge-coral {
+    background: rgba(255, 108, 93, 0.12);
+    color: var(--coral-deep);
+    border-color: transparent;
+  }
+
+  /* Card */
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--e1);
+    transition: box-shadow var(--ark-dur-base) var(--ease),
+      transform var(--ark-dur-fast) var(--ease);
+  }
+  .card:hover {
+    box-shadow: var(--e2);
+    transform: translateY(-1px);
+  }
+
+  /* Hairline rule */
+  .hairline {
+    height: 1px;
+    background: var(--line);
+    border: 0;
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background: rgba(250, 248, 243, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--ark-dur-base) var(--ease);
+  }
+  .nav.scrolled {
+    border-bottom-color: var(--line);
+  }
+
+  /* Scroll progress line */
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--coral);
+    z-index: 60;
+    transform-origin: left;
+  }
+
+  /* Footer */
+  .footer {
+    position: relative;
+    background: var(--ink);
+    color: rgba(244, 236, 222, 0.7);
+  }
+  .footer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url(/grain.svg);
+    background-size: 160px 160px;
+    mix-blend-mode: overlay;
+    opacity: 0.5;
+    pointer-events: none;
   }
 }
 
 /* ------------------------------------------------------------------ */
-/*  Misc                                                               */
+/*  Scrollbar                                                          */
 /* ------------------------------------------------------------------ */
 ::-webkit-scrollbar {
   width: 10px;
@@ -149,16 +376,19 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: rgba(107, 115, 144, 0.3);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--brand) / 0.6);
+  background: rgba(255, 108, 93, 0.6);
   background-clip: content-box;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Reduced motion                                                     */
+/* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -167,5 +397,9 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

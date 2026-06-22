@@ -1,8 +1,9 @@
 "use client";
 
-import { ListFilter, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { CategoryIcon } from "@/components/changelog/category-icon";
+import { PixelIcon } from "@/components/mosaic/pixel-icon";
 import { STATUS_META, STATUS_ORDER } from "@/lib/changelog-meta";
 import type { Category, TicketStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,12 @@ export interface FilterBarProps {
   onToggleStatus: (status: TicketStatus) => void;
   onClear: () => void;
 }
+
+const LABEL =
+  "mr-1 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-mute";
+
+const CHIP_BASE =
+  "inline-flex items-center gap-2 rounded-md9 border px-3 py-1.5 text-sm transition-colors";
 
 export function FilterBar({
   categories,
@@ -30,8 +37,8 @@ export function FilterBar({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          <ListFilter className="h-3.5 w-3.5" /> Módulos
+        <span className={LABEL}>
+          <PixelIcon name="layers" unit={3} tint="#6B7390" /> Módulos
         </span>
         {categories.map((cat) => {
           const active = selectedCategories.has(cat.key);
@@ -42,13 +49,13 @@ export function FilterBar({
               onClick={() => onToggleCategory(cat.key)}
               aria-pressed={active}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-all",
+                CHIP_BASE,
                 active
-                  ? "border-brand/50 bg-brand/15 text-brand ring-1 ring-inset ring-brand/20"
-                  : "border-border/60 bg-muted/40 text-muted-foreground hover:border-brand/40 hover:text-foreground",
+                  ? "border-coral bg-coral text-white"
+                  : "border-line-2 bg-canvas text-ink-soft hover:border-coral hover:text-coral-deep",
               )}
             >
-              <CategoryIcon name={cat.icon} className="h-3.5 w-3.5" />
+              <CategoryIcon name={cat.icon} unit={4} />
               {cat.name}
             </button>
           );
@@ -56,9 +63,7 @@ export function FilterBar({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Tipo
-        </span>
+        <span className={LABEL}>Tipo</span>
         {STATUS_ORDER.map((status) => {
           const active = selectedStatuses.has(status);
           const meta = STATUS_META[status];
@@ -69,13 +74,14 @@ export function FilterBar({
               onClick={() => onToggleStatus(status)}
               aria-pressed={active}
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-all",
+                CHIP_BASE,
+                "font-mono text-[11px] uppercase tracking-[0.1em]",
                 active
-                  ? meta.badgeClass + " ring-1 ring-inset"
-                  : "border-border/60 bg-muted/40 text-muted-foreground hover:text-foreground",
+                  ? meta.badgeClass
+                  : "border-line-2 bg-canvas text-mute hover:text-ink",
               )}
             >
-              <span className={cn("h-1.5 w-1.5 rounded-full", meta.dotClass)} />
+              <span className={cn("h-1.5 w-1.5 rounded-[1px]", meta.dotClass)} />
               {meta.label}
             </button>
           );
@@ -85,7 +91,7 @@ export function FilterBar({
           <button
             type="button"
             onClick={onClear}
-            className="ml-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition hover:text-foreground"
+            className="ml-1 inline-flex items-center gap-1 rounded-md9 px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-mute transition hover:text-coral-deep"
           >
             <X className="h-3.5 w-3.5" />
             Limpiar filtros

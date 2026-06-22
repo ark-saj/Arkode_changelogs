@@ -2,7 +2,16 @@ import { Heart, Lightbulb, ThumbsUp, type LucideIcon } from "lucide-react";
 import type { ReactionCounts, TicketStatus } from "@/lib/types";
 
 /**
- * Presentation metadata for each ticket status.
+ * Presentation metadata for each ticket status (Mosaic).
+ * Styled as muted mono badge tints: bg = status color at ~12% alpha, fg = the
+ * color itself. Status colors are the one categorical exception to "one coral
+ * per view" and read as a legend, not as competing UI accents.
+ *
+ * new          → Nuevo          coral-deep #E8503F (the brand tint — the star)
+ * improvement  → Mejora         blue       #2A6FDB
+ * fix          → Corrección     crimson    #C5362A
+ * optimization → Optimización   orange     #FF8A3D
+ *
  * Class strings are written out in full so Tailwind's JIT can see them.
  */
 export const STATUS_META: Record<
@@ -12,26 +21,26 @@ export const STATUS_META: Record<
   new: {
     label: "Nuevo",
     badgeClass:
-      "text-status-new bg-status-new/10 border-status-new/30 ring-status-new/10",
-    dotClass: "bg-status-new",
+      "text-[#E8503F] bg-[#E8503F]/[0.12] border-[#E8503F]/30 ring-[#E8503F]/10",
+    dotClass: "bg-[#E8503F]",
   },
   improvement: {
     label: "Mejora",
     badgeClass:
-      "text-status-improvement bg-status-improvement/10 border-status-improvement/30 ring-status-improvement/10",
-    dotClass: "bg-status-improvement",
+      "text-[#2A6FDB] bg-[#2A6FDB]/[0.12] border-[#2A6FDB]/30 ring-[#2A6FDB]/10",
+    dotClass: "bg-[#2A6FDB]",
   },
   fix: {
     label: "Corrección",
     badgeClass:
-      "text-status-fix bg-status-fix/10 border-status-fix/30 ring-status-fix/10",
-    dotClass: "bg-status-fix",
+      "text-[#C5362A] bg-[#C5362A]/[0.12] border-[#C5362A]/30 ring-[#C5362A]/10",
+    dotClass: "bg-[#C5362A]",
   },
   optimization: {
     label: "Optimización",
     badgeClass:
-      "text-status-optimization bg-status-optimization/10 border-status-optimization/30 ring-status-optimization/10",
-    dotClass: "bg-status-optimization",
+      "text-[#FF8A3D] bg-[#FF8A3D]/[0.12] border-[#FF8A3D]/30 ring-[#FF8A3D]/10",
+    dotClass: "bg-[#FF8A3D]",
   },
 };
 

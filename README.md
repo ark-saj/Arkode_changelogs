@@ -187,3 +187,34 @@ la implementación técnica.**
 
 ❌ "Se agregó una validación en el modelo CRMLead."
 ✅ "Ahora el sistema evita registrar oportunidades sin información importante."
+
+---
+
+## 🖼️ Capturas: imágenes y GIFs (Odoo)
+
+Cada `Screenshot` puede mostrar un mockup generado (demo) **o** una captura real.
+Cuando pones un `url`, el portal lo usa en vez del mockup:
+
+- **Imagen** (`.webp/.png/.jpg`): se sirve con `next/image` (responsive, lazy, formato moderno).
+- **Video** (`.mp4/.webm`): se reproduce solo, en silencio y en bucle ("se ve corriendo"), y
+  **solo carga cuando entra en pantalla** (para que muchas capturas no pesen). Usa `kind:"video"`
+  y opcionalmente `poster` (imagen de portada).
+
+### Flujo recomendado (no subimos archivos pesados)
+
+Los GIFs pesan mucho. Antes de subir, optimiza la carpeta de capturas:
+
+```bash
+npm run optimize:media -- ./media-inbox ./media-optimized
+```
+
+- Imágenes → WebP redimensionado (máx 1600px).
+- **GIF → MP4 + WebM + poster.jpg** (hasta ~90% más liviano, se reproduce solo).
+- Requiere `ffmpeg` para GIF/video (macOS: `brew install ffmpeg`).
+
+Luego subí los archivos de `media-optimized/` a **Supabase Storage** y poné su URL pública en
+el `Screenshot` (`url`, y `poster` para video). En modo Supabase, editás la fila; en demo,
+editás [`src/lib/data/mock-data.ts`](src/lib/data/mock-data.ts).
+
+> Regla: subí el `.mp4` como `url` (compatibilidad universal). El `.webm` queda como fuente
+> opcional más liviana.

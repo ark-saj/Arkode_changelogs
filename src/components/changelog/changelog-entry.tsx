@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Rocket } from "lucide-react";
-
+import { AnimatePresence } from "framer-motion";
 import { TicketCard } from "@/components/changelog/ticket-card";
+import { MDiv } from "@/components/motion/motion-safe";
+import { SectionTab } from "@/components/mosaic/section-tab";
+import { slideUp, staggerContainer } from "@/components/motion/variants";
 import { formatLongDate, pluralize, relativeLabel } from "@/lib/format";
 import type { Category, ChangelogEntry } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -20,63 +21,61 @@ export function ChangelogEntryNode({
   const count = entry.tickets.length;
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative pl-12 sm:pl-16"
-    >
-      {/* timeline node */}
-      <div className="absolute left-[14px] top-1.5 sm:left-[22px]">
+    <section id={`rel-${entry.date}`} className="relative scroll-mt-24 pl-12 sm:pl-16">
+      {/* date node on the rail — coral dot for the latest entry only */}
+      <div className="absolute left-[14px] top-[7px] sm:left-[22px]">
         <span
           className={cn(
-            "relative grid h-4 w-4 place-items-center rounded-full ring-4 ring-background",
-            "bg-gradient-to-br from-brand to-brand-soft",
+            "block h-2.5 w-2.5 rounded-full ring-4 ring-canvas",
+            isLatest ? "bg-coral" : "bg-line-2",
           )}
-        >
-          {isLatest && (
-            <span className="absolute inset-0 -z-0 rounded-full bg-brand/60 animate-pulse-ring" />
-          )}
-        </span>
+        />
       </div>
 
-      {/* entry header */}
-      <div className="mb-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <time className="font-display text-lg font-semibold tracking-tight">
-            {formatLongDate(entry.date)}
-          </time>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">
-            <Rocket className="h-3.5 w-3.5" />
+      {/* entry header — folder-tab date over the coral rule */}
+      <div className="mb-5">
+        <SectionTab
+          meta={pluralize(count, "cambio", "cambios")}
+        >
+          {formatLongDate(entry.date)}
+        </SectionTab>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-mute">
             {pluralize(count, "cambio implementado", "cambios implementados")}
           </span>
           {isLatest && (
-            <span className="rounded-full bg-status-new/15 px-2.5 py-0.5 text-xs font-medium text-status-new">
+            <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-coral-deep">
               {relativeLabel(entry.date)}
             </span>
           )}
         </div>
         {entry.title && (
-          <h3 className="mt-1 text-sm font-medium text-foreground/90">
+          <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-ink">
             {entry.title}
           </h3>
         )}
-        <p className="mt-0.5 font-description text-sm text-muted-foreground">
-          {entry.summary}
-        </p>
+        <p className="mt-1 text-sm leading-relaxed text-mute">{entry.summary}</p>
       </div>
 
-      {/* tickets */}
-      <div className="space-y-3">
-        {entry.tickets.map((ticket) => (
-          <TicketCard
-            key={ticket.code}
-            ticket={ticket}
-            category={categoriesByKey[ticket.categoryKey]}
-          />
-        ))}
-      </div>
-    </motion.section>
+      {/* tickets — stagger in; layout so they reflow smoothly */}
+      <MDiv
+        className="space-y-3"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+      >
+        <AnimatePresence initial={false}>
+          {entry.tickets.map((ticket) => (
+            <MDiv key={ticket.code} layout variants={slideUp} exit="hidden">
+              <TicketCard
+                ticket={ticket}
+                category={categoriesByKey[ticket.categoryKey]}
+              />
+            </MDiv>
+          ))}
+        </AnimatePresence>
+      </MDiv>
+    </section>
   );
 }

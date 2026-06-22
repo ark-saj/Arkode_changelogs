@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { MoveHorizontal } from "lucide-react";
 
 import { MockScreenshot } from "@/components/changelog/mock-screenshot";
+import { PixelIcon } from "@/components/mosaic/pixel-icon";
 import type { BeforeAfter } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 /**
  * Interactive before/after comparison. Drag the handle (or use the arrow keys)
@@ -42,7 +41,7 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[16/10] w-full cursor-ew-resize select-none overflow-hidden rounded-2xl border border-border/60 shadow-glass"
+      className="relative aspect-[16/10] w-full cursor-ew-resize select-none overflow-hidden rounded-lg14 border border-line bg-white shadow-e1"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={stop}
@@ -54,9 +53,10 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
           variant={data.afterVariant}
           seed={(data.seed ?? 1) + 100}
           url={data.afterUrl}
+          alt={data.afterCaption}
           className="h-full w-full"
         />
-        <span className="absolute right-3 top-3 rounded-full bg-status-new/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow">
+        <span className="absolute right-3 top-3 rounded-sm6 bg-coral px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-white shadow-e1">
           Después
         </span>
       </div>
@@ -70,16 +70,17 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
           variant={data.beforeVariant}
           seed={data.seed ?? 1}
           url={data.beforeUrl}
+          alt={data.beforeCaption}
           className="h-full w-full grayscale-[0.25]"
         />
-        <span className="absolute left-3 top-3 rounded-full bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow">
+        <span className="absolute left-3 top-3 rounded-sm6 bg-ink px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-white shadow-e1">
           Antes
         </span>
       </div>
 
       {/* handle */}
       <div
-        className="absolute inset-y-0 z-10 w-0.5 bg-white/90 shadow-[0_0_10px_rgba(0,0,0,0.4)]"
+        className="absolute inset-y-0 z-10 w-0.5 bg-coral"
         style={{ left: `${pos}%` }}
       >
         <button
@@ -90,9 +91,12 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
           aria-valuemax={100}
           role="slider"
           onKeyDown={onKeyDown}
-          className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-slate-800 shadow-glass-lg ring-2 ring-brand/40 focus:outline-none focus-visible:ring-4"
+          className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-line-2 bg-white text-coral shadow-e2 transition-transform duration-150 ease-ark hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
         >
-          <MoveHorizontal className="h-5 w-5" />
+          <span className="flex items-center gap-px">
+            <PixelIcon name="arrowR" unit={2} tint="#FF6C5D" className="-scale-x-100" />
+            <PixelIcon name="arrowR" unit={2} tint="#FF6C5D" />
+          </span>
         </button>
       </div>
     </div>

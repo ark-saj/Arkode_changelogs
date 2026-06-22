@@ -1,0 +1,72 @@
+/* =========================================================================
+   Arkode Design System — Mosaic v1 · design tokens
+   The single source of truth. Import this, build everything from var(--…).
+   ========================================================================= */
+:root{
+  /* ---- color · brand ---- */
+  --ark-coral:        #FF6C5D;   /* primary brand + single UI accent */
+  --ark-coral-deep:   #E8503F;   /* text-safe coral, hovers */
+  --ark-ink:          #001C43;   /* navy — primary text + dark surface */
+  --ark-bone:         #F4ECDE;   /* warm secondary surface */
+  --ark-canvas:       #FAF8F3;   /* primary page background */
+
+  /* ---- color · mosaic accents (illustration only) ---- */
+  --ark-orange:       #FF8A3D;
+  --ark-crimson:      #C5362A;
+  --ark-blue:         #2A6FDB;
+
+  /* ---- color · semantic ---- */
+  --ark-success:      #1F8A5B;
+  --ark-warning:      #E8503F;
+  --ark-info:         #2A6FDB;
+
+  /* ---- color · text ---- */
+  --ark-text:         #001C43;
+  --ark-text-soft:    #33405E;
+  --ark-text-muted:   #6B7390;
+  --ark-text-faint:   #9AA1B6;
+
+  /* ---- color · lines ---- */
+  --ark-line:         #E4DECF;
+  --ark-line-strong:  #D7CFBC;
+  --ark-hair:         rgba(0,28,67,0.09);
+
+  /* ---- type ---- */
+  --ark-font-sans:    'Geist',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  --ark-font-mono:    'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ark-w-regular:    400;
+  --ark-w-medium:     500;
+  --ark-w-semibold:   600;
+
+  /* ---- spacing (4px base) ---- */
+  --ark-space-1:  4px;
+  --ark-space-2:  8px;
+  --ark-space-3:  12px;
+  --ark-space-4:  16px;
+  --ark-space-6:  24px;
+  --ark-space-8:  32px;
+  --ark-space-12: 48px;
+  --ark-space-16: 64px;
+  --ark-space-24: 96px;
+
+  /* ---- radius ---- */
+  --ark-r-sm: 6px;   /* badges, tags */
+  --ark-r-md: 9px;   /* buttons, inputs, rows */
+  --ark-r-lg: 14px;  /* cards, panels, slides */
+
+  /* ---- elevation ---- */
+  --ark-e1: 0 1px 2px rgba(0,28,67,0.06);
+  --ark-e2: 0 6px 16px -8px rgba(0,28,67,0.16);
+  --ark-e3: 0 24px 50px -22px rgba(0,28,67,0.28);
+
+  /* ---- motion ---- */
+  --ark-ease:     cubic-bezier(0.22,0.68,0,1);
+  --ark-dur-fast: 120ms;
+  --ark-dur-base: 200ms;
+  --ark-dur-slow: 320ms;
+
+  /* ---- grid ---- */
+  --ark-grid-cols: 6;
+  --ark-grid-base: 4px;
+  --ark-maxw:      1320px;
+}

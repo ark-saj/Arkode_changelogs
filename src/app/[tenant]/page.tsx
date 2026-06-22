@@ -1,7 +1,10 @@
-import { Hero } from "@/components/changelog/hero";
-import { ChangelogExplorer } from "@/components/changelog/changelog-explorer";
-import { getRepository } from "@/lib/data/repository";
-import { resolveTenant } from "@/lib/data/tenant-context";
+import { ChangelogPortal } from "@/components/portal/changelog-portal";
+import {
+  activeDataSource,
+  getRepository,
+  hasSupabaseCredentials,
+} from "@/lib/data/repository";
+import { isTenantAdmin, resolveTenant } from "@/lib/data/tenant-context";
 
 // Per-tenant, session-scoped: always rendered dynamically.
 export const dynamic = "force-dynamic";
@@ -14,13 +17,17 @@ export default async function TenantPage({
   const { tenant: slug } = await params;
   const data = await getRepository().getChangelog(slug);
   const tenant = data.tenant ?? (await resolveTenant(slug));
+  const isAdmin = await isTenantAdmin(slug);
 
   return (
-    <div className="container pb-10">
-      <Hero brandName={tenant?.name ?? slug} />
-      <div className="mt-16 sm:mt-20">
-        <ChangelogExplorer data={data} />
-      </div>
-    </div>
+    <ChangelogPortal
+      data={data}
+      tenant={tenant?.name ?? slug}
+      brandLogo={tenant?.logo}
+      isAdmin={isAdmin}
+      dataSource={activeDataSource()}
+      showLogout={hasSupabaseCredentials()}
+      settingsHref={isAdmin ? `/${slug}/configuracion` : undefined}
+    />
   );
 }
