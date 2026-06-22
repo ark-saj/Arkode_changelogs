@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
@@ -18,14 +19,29 @@ const config: Config = {
         ark: "cubic-bezier(0.22,0.68,0,1)",
       },
       colors: {
-        // Mosaic palette — fixed Arkode coral, no per-tenant theming.
-        canvas: "#FAF8F3",
-        bone: { DEFAULT: "#F4ECDE", 2: "#EFE6D6" },
-        ink: { DEFAULT: "#001C43", soft: "#33405E" },
-        mute: "#6B7390",
-        faint: "#9AA1B6",
-        line: { DEFAULT: "#E4DECF", 2: "#D7CFBC" },
-        coral: { DEFAULT: "#FF6C5D", deep: "#E8503F" },
+        // Mosaic palette — RGB channel tokens (see globals.css) so opacity
+        // modifiers work and the .dark block can flip every utility class.
+        canvas: "rgb(var(--canvas) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        bone: {
+          DEFAULT: "rgb(var(--bone) / <alpha-value>)",
+          2: "rgb(var(--bone-2) / <alpha-value>)",
+        },
+        ink: {
+          DEFAULT: "rgb(var(--ink) / <alpha-value>)",
+          soft: "rgb(var(--ink-soft) / <alpha-value>)",
+          surface: "rgb(var(--ink-surface) / <alpha-value>)",
+        },
+        mute: "rgb(var(--mute) / <alpha-value>)",
+        faint: "rgb(var(--faint) / <alpha-value>)",
+        line: {
+          DEFAULT: "rgb(var(--line) / <alpha-value>)",
+          2: "rgb(var(--line-2) / <alpha-value>)",
+        },
+        coral: {
+          DEFAULT: "rgb(var(--coral) / <alpha-value>)",
+          deep: "rgb(var(--coral-deep) / <alpha-value>)",
+        },
         // Mosaic accents — illustration only (canvas, pixel icons, badge tints).
         orange: "#FF8A3D",
         crimson: "#C5362A",

@@ -72,7 +72,15 @@ export default function LoginPage() {
             width={150}
             height={20}
             priority
-            className="h-[22px] w-auto"
+            className="h-[22px] w-auto dark:hidden"
+          />
+          <Image
+            src="/brand/arkode-white.png"
+            alt="Arkode"
+            width={150}
+            height={20}
+            priority
+            className="hidden h-[22px] w-auto dark:block"
           />
           <span className="mt-5 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-mute">
             Centro de Novedades

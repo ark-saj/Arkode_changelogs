@@ -76,17 +76,7 @@ function NavItem({
       )}
       <span className="shrink-0">{icon}</span>
       {!collapsed && (
-        <>
-          <span className="min-w-0 flex-1 truncate">{label}</span>
-          <span
-            className={cn(
-              "shrink-0 font-mono text-[10.5px] tabular-nums tracking-[0.08em]",
-              active ? "text-coral-deep" : "text-faint",
-            )}
-          >
-            {count}
-          </span>
-        </>
+        <span className="min-w-0 flex-1 truncate">{label}</span>
       )}
     </button>
   );
@@ -249,7 +239,7 @@ export function Sidebar(props: SidebarProps) {
         {open && (
           <div className="fixed inset-0 z-[70] lg:hidden">
             <MDiv
-              className="absolute inset-0 bg-ink/55"
+              className="absolute inset-0 bg-ink-surface/55"
               onClick={onClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

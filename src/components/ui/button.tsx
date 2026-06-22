@@ -15,7 +15,7 @@ const buttonVariants = cva(
         default:
           "bg-coral text-white hover:bg-coral-deep hover:-translate-y-px",
         // dark = ink surface
-        dark: "bg-ink text-white hover:bg-[#0a2a5c] hover:-translate-y-px",
+        dark: "bg-ink-surface text-white hover:bg-[#0a2a5c] hover:-translate-y-px",
         // outline / ghost = line-2 border
         outline:
           "border border-line-2 bg-transparent text-ink hover:bg-bone hover:-translate-y-px",

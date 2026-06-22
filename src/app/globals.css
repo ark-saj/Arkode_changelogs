@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 /* =========================================================================
-   Arkode Design System — Mosaic v1
-   Light Mosaic only. Fixed Arkode coral. No dark mode, no glass, no blobs.
-   Tokens mirror design-reference/arkode-tokens.css (hex), exposed both as
-   --ark-* (source of truth) and short Tailwind-friendly aliases.
+   Arkode Design System — Mosaic v1 (+ dark mode)
+   Semantic color tokens are RGB channel triples ("R G B") so Tailwind can
+   apply opacity via rgb(var(--token) / <alpha>) and so a single .dark block
+   can flip the whole UI. The brand coral is fixed across themes; surfaces are
+   decoupled (--surface, --ink-surface) so navy fills don't invert with text.
    ========================================================================= */
 @layer base {
   :root {
@@ -16,35 +17,31 @@
     --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
       monospace;
 
-    /* ---- color · brand ---- */
-    --ark-coral: #ff6c5d; /* primary brand + single UI accent */
-    --ark-coral-deep: #e8503f; /* text-safe coral, hovers */
-    --ark-ink: #001c43; /* navy — primary text + dark surface */
-    --ark-bone: #f4ecde; /* warm secondary surface */
-    --ark-bone-2: #efe6d6;
-    --ark-canvas: #faf8f3; /* primary page background */
+    /* ---- semantic color tokens — RGB channel triples ---- */
+    --canvas: 250 248 243; /* page background */
+    --surface: 255 255 255; /* cards, dialogs, palette */
+    --surface-2: 255 255 255; /* nested surfaces */
+    --bone: 244 236 222; /* secondary surface, hovers */
+    --bone-2: 239 230 214;
+    --ink: 0 28 67; /* primary text (navy) */
+    --ink-soft: 51 64 94;
+    --mute: 107 115 144;
+    --faint: 154 161 182;
+    --line: 228 222 207;
+    --line-2: 215 207 188;
+    --coral: 255 108 93; /* fixed brand accent */
+    --coral-deep: 232 80 63;
+    --ink-surface: 0 28 67; /* always-navy fills (footer, .sec.ink, scrims) */
 
-    /* ---- color · mosaic accents (illustration only) ---- */
+    /* ---- non-channel tokens ---- */
+    --hair: rgba(0, 28, 67, 0.09);
+    --nav-bg: rgba(250, 248, 243, 0.85); /* translucent top bar */
+
+    /* ---- color · mosaic accents (illustration only, fixed) ---- */
     --ark-orange: #ff8a3d;
     --ark-crimson: #c5362a;
     --ark-blue: #2a6fdb;
     --ark-green: #1f8a5b;
-
-    /* ---- color · semantic ---- */
-    --ark-success: #1f8a5b;
-    --ark-warning: #e8503f;
-    --ark-info: #2a6fdb;
-
-    /* ---- color · text ---- */
-    --ark-text: #001c43;
-    --ark-text-soft: #33405e;
-    --ark-text-muted: #6b7390;
-    --ark-text-faint: #9aa1b6;
-
-    /* ---- color · lines ---- */
-    --ark-line: #e4decf;
-    --ark-line-strong: #d7cfbc;
-    --ark-hair: rgba(0, 28, 67, 0.09);
 
     /* ---- type weights ---- */
     --ark-w-regular: 400;
@@ -63,47 +60,47 @@
     --ark-space-24: 96px;
 
     /* ---- radius ---- */
-    --ark-r-sm: 6px; /* badges, tags */
-    --ark-r-md: 9px; /* buttons, inputs, rows */
-    --ark-r-lg: 14px; /* cards, panels, slides */
+    --r-sm: 6px;
+    --r-md: 9px;
+    --r-lg: 14px;
 
     /* ---- elevation ---- */
-    --ark-e1: 0 1px 2px rgba(0, 28, 67, 0.06);
-    --ark-e2: 0 6px 16px -8px rgba(0, 28, 67, 0.16);
-    --ark-e3: 0 24px 50px -22px rgba(0, 28, 67, 0.28);
+    --e1: 0 1px 2px rgba(0, 28, 67, 0.06);
+    --e2: 0 6px 16px -8px rgba(0, 28, 67, 0.16);
+    --e3: 0 24px 50px -22px rgba(0, 28, 67, 0.28);
 
     /* ---- motion ---- */
-    --ark-ease: cubic-bezier(0.22, 0.68, 0, 1);
+    --ease: cubic-bezier(0.22, 0.68, 0, 1);
     --ark-dur-fast: 120ms;
     --ark-dur-base: 200ms;
     --ark-dur-slow: 320ms;
 
-    /* ---- grid ---- */
-    --ark-grid-cols: 6;
-    --ark-grid-base: 4px;
-    --ark-maxw: 1280px;
+    /* ---- layout ---- */
+    --maxw: 1280px;
+  }
 
-    /* ---- short aliases consumed by utility classes below ---- */
-    --canvas: var(--ark-canvas);
-    --bone: var(--ark-bone);
-    --bone-2: var(--ark-bone-2);
-    --ink: var(--ark-ink);
-    --ink-soft: var(--ark-text-soft);
-    --mute: var(--ark-text-muted);
-    --faint: var(--ark-text-faint);
-    --line: var(--ark-line);
-    --line-2: var(--ark-line-strong);
-    --hair: var(--ark-hair);
-    --coral: var(--ark-coral);
-    --coral-deep: var(--ark-coral-deep);
-    --e1: var(--ark-e1);
-    --e2: var(--ark-e2);
-    --e3: var(--ark-e3);
-    --r-sm: var(--ark-r-sm);
-    --r-md: var(--ark-r-md);
-    --r-lg: var(--ark-r-lg);
-    --ease: var(--ark-ease);
-    --maxw: var(--ark-maxw);
+  /* =======================================================================
+     Dark mode — flip the semantic tokens only. Coral + mosaic accents stay
+     fixed. Surfaces (--surface, --ink-surface) keep navy fills dark.
+     ======================================================================= */
+  .dark {
+    --canvas: 12 20 36; /* deep navy-black page */
+    --surface: 20 32 58; /* cards / dialogs */
+    --surface-2: 26 39 69;
+    --bone: 27 39 64; /* secondary surface, hovers */
+    --bone-2: 32 45 73;
+    --ink: 238 241 246; /* primary text — light */
+    --ink-soft: 198 205 220;
+    --mute: 141 150 172;
+    --faint: 95 104 132;
+    --line: 35 49 73;
+    --line-2: 45 60 88;
+    --ink-surface: 9 17 33; /* footer / btn-dark / scrims */
+    --hair: rgba(255, 255, 255, 0.08);
+    --nav-bg: rgba(12, 20, 36, 0.85);
+    --e1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --e2: 0 6px 16px -8px rgba(0, 0, 0, 0.55);
+    --e3: 0 24px 50px -22px rgba(0, 0, 0, 0.7);
   }
 }
 
@@ -115,8 +112,8 @@
     scroll-behavior: smooth;
   }
   body {
-    background: var(--canvas);
-    color: var(--ink);
+    background: rgb(var(--canvas));
+    color: rgb(var(--ink));
     font-family: var(--font-sans);
     font-weight: var(--ark-w-regular);
     line-height: 1.45;
@@ -133,11 +130,11 @@
     font-weight: var(--ark-w-semibold);
     letter-spacing: -0.045em;
     line-height: 0.98;
-    color: var(--ink);
+    color: rgb(var(--ink));
   }
   ::selection {
-    background: rgba(255, 108, 93, 0.18);
-    color: var(--ink);
+    background: rgb(var(--coral) / 0.18);
+    color: rgb(var(--ink));
   }
 }
 
@@ -152,30 +149,30 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.16em;
-    color: var(--mute);
+    color: rgb(var(--mute));
     display: inline-flex;
     align-items: center;
     gap: 8px;
   }
   .eyebrow .num {
-    color: var(--coral-deep);
+    color: rgb(var(--coral-deep));
   }
 
   /* Section wrappers + tones */
   .sec {
     position: relative;
     padding: var(--ark-space-24) var(--ark-space-6);
-    background: var(--canvas);
+    background: rgb(var(--canvas));
   }
   .sec-inner {
     max-width: var(--maxw);
     margin: 0 auto;
   }
   .sec.bone {
-    background: var(--bone);
+    background: rgb(var(--bone));
   }
   .sec.ink {
-    background: var(--ink);
+    background: rgb(var(--ink-surface));
     color: #f4ecde;
   }
   .sec.ink h1,
@@ -208,13 +205,13 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.14em;
-    color: var(--mute);
+    color: rgb(var(--mute));
   }
   .sub-h::after {
     content: "";
     flex: 1;
     height: 1px;
-    background: var(--line);
+    background: rgb(var(--line));
   }
 
   /* Reveal-on-scroll */
@@ -251,26 +248,26 @@
     transform: translateY(-1px);
   }
   .btn-coral {
-    background: var(--coral);
+    background: rgb(var(--coral));
     color: #fff;
   }
   .btn-coral:hover {
-    background: var(--coral-deep);
+    background: rgb(var(--coral-deep));
   }
   .btn-dark {
-    background: var(--ink);
+    background: rgb(var(--ink-surface));
     color: #fff;
   }
   .btn-dark:hover {
-    background: #0a2a5c;
+    filter: brightness(1.15);
   }
   .btn-ghost {
     background: transparent;
-    color: var(--ink);
-    border-color: var(--line-2);
+    color: rgb(var(--ink));
+    border-color: rgb(var(--line-2));
   }
   .btn-ghost:hover {
-    background: var(--bone);
+    background: rgb(var(--bone));
   }
 
   /* Badges (mono tinted; status tints come from changelog-meta) */
@@ -285,20 +282,20 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    background: var(--bone);
-    color: var(--ink-soft);
-    border: 1px solid var(--line);
+    background: rgb(var(--bone));
+    color: rgb(var(--ink-soft));
+    border: 1px solid rgb(var(--line));
   }
   .badge-coral {
-    background: rgba(255, 108, 93, 0.12);
-    color: var(--coral-deep);
+    background: rgb(var(--coral) / 0.12);
+    color: rgb(var(--coral-deep));
     border-color: transparent;
   }
 
   /* Card */
   .card {
-    background: #fff;
-    border: 1px solid var(--line);
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--line));
     border-radius: var(--r-lg);
     box-shadow: var(--e1);
     transition: box-shadow var(--ark-dur-base) var(--ease),
@@ -312,7 +309,7 @@
   /* Hairline rule */
   .hairline {
     height: 1px;
-    background: var(--line);
+    background: rgb(var(--line));
     border: 0;
   }
 
@@ -326,14 +323,14 @@
     height: 60px;
     display: flex;
     align-items: center;
-    background: rgba(250, 248, 243, 0.85);
+    background: var(--nav-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid transparent;
     transition: border-color var(--ark-dur-base) var(--ease);
   }
   .nav.scrolled {
-    border-bottom-color: var(--line);
+    border-bottom-color: rgb(var(--line));
   }
 
   /* Scroll progress line */
@@ -342,7 +339,7 @@
     top: 0;
     left: 0;
     height: 2px;
-    background: var(--coral);
+    background: rgb(var(--coral));
     z-index: 60;
     transform-origin: left;
   }
@@ -350,7 +347,7 @@
   /* Footer */
   .footer {
     position: relative;
-    background: var(--ink);
+    background: rgb(var(--ink-surface));
     color: rgba(244, 236, 222, 0.7);
   }
   .footer::after {
@@ -376,13 +373,13 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(107, 115, 144, 0.3);
+  background: rgb(var(--mute) / 0.3);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 108, 93, 0.6);
+  background: rgb(var(--coral) / 0.6);
   background-clip: content-box;
 }
 
