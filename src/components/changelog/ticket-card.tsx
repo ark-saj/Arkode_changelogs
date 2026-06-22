@@ -30,7 +30,7 @@ export function TicketCard({
   return (
     <div
       id={`t-${ticket.code}`}
-      className="group scroll-mt-28 overflow-hidden rounded-lg14 border border-line bg-white shadow-e1 transition-[box-shadow,transform] duration-200 ease-ark hover:-translate-y-0.5 hover:shadow-e2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="group scroll-mt-28 overflow-hidden rounded-lg14 border border-line bg-surface shadow-e1 transition-[box-shadow,transform] duration-200 ease-ark hover:-translate-y-0.5 hover:shadow-e2 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
     >
       {/* Header — always visible, scannable. The status badge is the one accent. */}
       <button

@@ -55,7 +55,7 @@ export function LogoUploader({
               className="h-full w-full object-contain p-2"
             />
           ) : (
-            <span className="grid h-12 w-12 place-items-center rounded-md9 bg-ink text-white">
+            <span className="grid h-12 w-12 place-items-center rounded-md9 bg-ink-surface text-white">
               <Sparkles className="h-6 w-6" />
             </span>
           )}

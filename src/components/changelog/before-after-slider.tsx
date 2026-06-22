@@ -41,7 +41,7 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[16/10] w-full cursor-ew-resize select-none overflow-hidden rounded-lg14 border border-line bg-white shadow-e1"
+      className="relative aspect-[16/10] w-full cursor-ew-resize select-none overflow-hidden rounded-lg14 border border-line bg-surface shadow-e1"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={stop}
@@ -73,7 +73,7 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
           alt={data.beforeCaption}
           className="h-full w-full grayscale-[0.25]"
         />
-        <span className="absolute left-3 top-3 rounded-sm6 bg-ink px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-white shadow-e1">
+        <span className="absolute left-3 top-3 rounded-sm6 bg-ink-surface px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-white shadow-e1">
           Antes
         </span>
       </div>
@@ -91,7 +91,7 @@ export function BeforeAfterSlider({ data }: { data: BeforeAfter }) {
           aria-valuemax={100}
           role="slider"
           onKeyDown={onKeyDown}
-          className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-line-2 bg-white text-coral shadow-e2 transition-transform duration-150 ease-ark hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
+          className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-line-2 bg-surface text-coral shadow-e2 transition-transform duration-150 ease-ark hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40 motion-reduce:transition-none motion-reduce:hover:scale-100 motion-reduce:active:scale-100"
         >
           <span className="flex items-center gap-px">
             <PixelIcon name="arrowR" unit={2} tint="#FF6C5D" className="-scale-x-100" />

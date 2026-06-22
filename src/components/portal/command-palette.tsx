@@ -135,7 +135,7 @@ export function CommandPalette({
           aria-label="Buscar novedades"
         >
           <motion.div
-            className="absolute inset-0 bg-ink/55"
+            className="absolute inset-0 bg-ink-surface/55"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -143,7 +143,7 @@ export function CommandPalette({
             transition={{ duration: DUR.base, ease: EASE }}
           />
           <motion.div
-            className="relative w-full max-w-[560px] overflow-hidden rounded-lg14 border border-line bg-white shadow-e3"
+            className="relative w-full max-w-[560px] overflow-hidden rounded-lg14 border border-line bg-surface shadow-e3"
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}

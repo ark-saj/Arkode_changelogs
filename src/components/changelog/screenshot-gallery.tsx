@@ -51,7 +51,7 @@ export function ScreenshotGallery({
             key={shot.id}
             type="button"
             onClick={() => openAt(i)}
-            className="group relative overflow-hidden rounded-lg14 border border-line bg-white shadow-e1 transition-all hover:-translate-y-px hover:shadow-e2 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40"
+            className="group relative overflow-hidden rounded-lg14 border border-line bg-surface shadow-e1 transition-all hover:-translate-y-px hover:shadow-e2 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40"
           >
             <MockScreenshot
               variant={shot.variant}
@@ -62,7 +62,7 @@ export function ScreenshotGallery({
               alt={shot.caption}
               className="transition-transform duration-500 group-hover:scale-[1.03]"
             />
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-ink/80 px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-ink-surface/80 px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
               <span className="block truncate text-left font-mono text-[11px] uppercase tracking-[0.1em] text-white">
                 {shot.caption}
               </span>

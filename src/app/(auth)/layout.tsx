@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+
 export const metadata: Metadata = {
   title: "Ingresar · Arkode",
   description: "Accedé al Centro de Novedades de tu empresa.",
@@ -16,6 +18,9 @@ export default function AuthLayout({
 }) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-canvas text-ink">
+      <div className="absolute right-4 top-4 z-50">
+        <ThemeToggle />
+      </div>
       {children}
     </div>
   );

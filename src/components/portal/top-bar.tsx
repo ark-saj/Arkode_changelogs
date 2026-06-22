@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Menu, Settings } from "lucide-react";
 
 import { LogoutButton } from "@/components/layout/logout-button";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { SquareBullet } from "@/components/mosaic/square-bullet";
 import { cn } from "@/lib/utils";
 
@@ -89,7 +90,15 @@ export function TopBar({
                 width={140}
                 height={20}
                 priority
-                className="h-[20px] w-auto"
+                className="h-[20px] w-auto dark:hidden"
+              />
+              <Image
+                src="/brand/arkode-white.png"
+                alt="Arkode"
+                width={140}
+                height={20}
+                priority
+                className="hidden h-[20px] w-auto dark:block"
               />
             </button>
 
@@ -169,6 +178,7 @@ export function TopBar({
               <span className="font-mono text-[13px]">⌘K</span>
             </button>
 
+            <ThemeToggle />
             {settingsHref && (
               <a
                 href={settingsHref}

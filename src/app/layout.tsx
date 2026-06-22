@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
+import { ThemeProvider } from "@/components/layout/theme-provider";
 
 // Geist = Arkode brand workhorse (display, headings, UI, body).
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
@@ -34,8 +35,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${geist.variable} ${geistMono.variable}`}>
-      <body className="bg-canvas font-sans text-ink antialiased">{children}</body>
+    <html
+      lang="es"
+      suppressHydrationWarning
+      className={`${geist.variable} ${geistMono.variable}`}
+    >
+      <body className="bg-canvas font-sans text-ink antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

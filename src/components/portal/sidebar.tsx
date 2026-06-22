@@ -239,7 +239,7 @@ export function Sidebar(props: SidebarProps) {
         {open && (
           <div className="fixed inset-0 z-[70] lg:hidden">
             <MDiv
-              className="absolute inset-0 bg-ink/55"
+              className="absolute inset-0 bg-ink-surface/55"
               onClick={onClose}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

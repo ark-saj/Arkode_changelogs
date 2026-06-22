@@ -99,7 +99,7 @@ function VideoFrame({
     <div
       ref={wrapRef}
       className={cn(
-        "relative aspect-[16/10] overflow-hidden bg-ink",
+        "relative aspect-[16/10] overflow-hidden bg-ink-surface",
         className,
       )}
     >

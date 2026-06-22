@@ -64,7 +64,7 @@ export function PixelCard({
   );
 
   const cardClass = cn(
-    "group flex h-full flex-col rounded-lg14 border border-line bg-white p-5 shadow-e1 transition-[transform,box-shadow] duration-200 ease-ark hover:-translate-y-0.5 hover:shadow-e2 motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+    "group flex h-full flex-col rounded-lg14 border border-line bg-surface p-5 shadow-e1 transition-[transform,box-shadow] duration-200 ease-ark hover:-translate-y-0.5 hover:shadow-e2 motion-reduce:transition-none motion-reduce:hover:translate-y-0",
     className,
   );
 
