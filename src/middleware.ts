@@ -16,6 +16,10 @@ export async function middleware(request: NextRequest) {
   // Mock/demo mode: no backend → no auth gating.
   if (!url || !anon) return NextResponse.next();
 
+  // The write API (Fase 2) authenticates with a per-tenant bearer token, not
+  // the session cookie — never gate or redirect it through the login flow.
+  if (request.nextUrl.pathname.startsWith("/api/")) return NextResponse.next();
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(url, anon, {
