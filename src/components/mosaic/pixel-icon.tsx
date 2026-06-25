@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
    Omit `weight` and the engine auto-picks by `unit`. */
 
 const PAL: Record<string, string> = {
-  n: "#001C43", // navy
+  n: "currentColor", // ink — follows the container's text color (theme-aware: navy in light, light in dark)
   c: "#FF6C5D", // coral
   o: "#FF8A3D", // warm orange (mosaic accent)
   r: "#C5362A", // crimson
