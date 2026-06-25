@@ -163,22 +163,24 @@ changelogs de A, con su branding y logo.
 
 ### Fase 2 — Capa de escritura + interfaz de agentes
 
-- [ ] Extender el contrato del repositorio: `createEntry`, `upsertTicket`,
+- [x] Extender el contrato del repositorio: `createEntry`, `upsertTicket`,
       `attachScreenshot` — `tenantId` siempre obligatorio.
-- [ ] `ChangelogService` tenant-aware que centraliza la lógica de escritura.
-- [ ] **Validación de input (Zod)** en el borde de `ChangelogService`: los
+- [x] `ChangelogService` tenant-aware que centraliza la lógica de escritura.
+- [x] **Validación de input (Zod)** en el borde de `ChangelogService`: los
       agentes son input no confiable.
-- [ ] **Idempotencia** de escrituras por clave natural `(tenantId + ticket code)`
+- [x] **Idempotencia** de escrituras por clave natural `(tenantId + ticket code)`
       para que los reintentos de agentes no dupliquen.
-- [ ] **API HTTP** tenant-scoped, autenticada por **token por tenant** (no un
-      service token global; ver §3.1). Base de todo lo demás.
-- [ ] **MCP server** que envuelve la API: tools `list_tenants`, `select_tenant`,
+- [x] **API HTTP** tenant-scoped, autenticada por **token por tenant** (no un
+      service token global; ver §3.1). Base de todo lo demás. (`/api/v1/*`)
+- [x] **MCP server** que envuelve la API: tools `list_tenants`, `select_tenant`,
       `create_changelog`, `upsert_ticket`. Acá vive el ruteo "primero identifico el
-      portal, después escribo".
-- [ ] **CLI** como tercer adaptador sobre el mismo servicio.
-- [ ] **Skill** que redacta changelogs respetando la regla de oro del copy.
-- [ ] **Tests de aislamiento de escritura:** un token del tenant A no puede
-      crear/editar en el tenant B.
+      portal, después escribo". (`mcp/changelog-server.mjs`)
+- [x] **CLI** como tercer adaptador sobre el mismo servicio.
+      (`scripts/changelog-cli.mjs`)
+- [x] **Skill** que redacta changelogs respetando la regla de oro del copy.
+      (`.claude/skills/changelog-writer/SKILL.md`)
+- [x] **Tests de aislamiento de escritura:** un token del tenant A no puede
+      crear/editar en el tenant B. (`tests/write-isolation.test.ts`)
 
 **Hecho cuando:** un agente puede, vía MCP/CLI/API, seleccionar un tenant y crear
 un changelog que aparece en el portal correcto — y solo en ese — con el test de

@@ -1,6 +1,7 @@
-// Seed demo auth users and map them to tenants (local dev).
+// Seed demo auth users and per-tenant API tokens, mapped to tenants (local dev).
 // Run after `supabase start` / `db reset`:  npm run db:seed-auth
-// Also imported by the real-auth isolation test so it is self-contained.
+// Also imported by the isolation tests so they are self-contained.
+import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
 const URL = process.env.SUPABASE_URL ?? "http://127.0.0.1:54321";
@@ -13,6 +14,15 @@ export const DEMO_USERS = [
   { email: "admin@everban.test", password: "demo12345", tenantSlug: "everban", role: "admin" },
   { email: "member@conecta.test", password: "demo12345", tenantSlug: "conecta", role: "member" },
 ];
+
+// Well-known LOCAL per-tenant write tokens (dev/test only). Each token can only
+// write to its own tenant — that is the Fase 2 §3.1 isolation boundary.
+export const DEV_TOKENS = {
+  conecta: "ark_conecta_devtoken",
+  everban: "ark_everban_devtoken",
+};
+
+const hashToken = (raw) => createHash("sha256").update(raw.trim()).digest("hex");
 
 export async function seedAuth() {
   const admin = createClient(URL, SERVICE_ROLE, {
@@ -54,15 +64,40 @@ export async function seedAuth() {
   }
 }
 
+/** Upsert one dev write-token per tenant (idempotent by token_hash). */
+export async function seedApiTokens() {
+  const admin = createClient(URL, SERVICE_ROLE, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+
+  for (const [slug, raw] of Object.entries(DEV_TOKENS)) {
+    const { data: tenant, error: tErr } = await admin
+      .from("tenants")
+      .select("id")
+      .eq("slug", slug)
+      .single();
+    if (tErr) throw new Error(`tenant ${slug}: ${tErr.message}`);
+
+    const { error } = await admin
+      .from("tenant_api_tokens")
+      .upsert(
+        { tenant_id: tenant.id, name: "dev", token_hash: hashToken(raw) },
+        { onConflict: "token_hash" },
+      );
+    if (error) throw new Error(`token ${slug}: ${error.message}`);
+    console.log(`✓ token "${raw}" → ${slug}`);
+  }
+}
+
 // CLI entry (robust on Windows paths)
 if (process.argv[1] && process.argv[1].replace(/\\/g, "/").endsWith("scripts/seed-auth.mjs")) {
-  seedAuth()
+  Promise.all([seedAuth(), seedApiTokens()])
     .then(() => {
-      console.log("Auth seed complete.");
+      console.log("Auth + token seed complete.");
       process.exit(0);
     })
     .catch((e) => {
-      console.error("Auth seed failed:", e.message);
+      console.error("Seed failed:", e.message);
       process.exit(1);
     });
 }
