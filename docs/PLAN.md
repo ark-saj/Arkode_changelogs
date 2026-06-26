@@ -188,12 +188,16 @@ aislamiento de escritura en verde.
 
 ### Fase 3 — Screenshots documentados
 
-- [ ] Ingesta de capturas atadas al ticket (subida manual o depositadas por agente).
-- [ ] Almacenamiento (Supabase Storage local) con `url` real en `Screenshot`
-      (el tipo ya soporta `url` además del mockup generado).
+- [x] Ingesta de capturas atadas al ticket (subida manual o depositadas por agente).
+      Vía agente: `attach_screenshot` (MCP) / `attach-screenshot` (CLI) /
+      `POST /api/v1/screenshots` con bytes base64. Vía manual: uploader admin en
+      Configuración (`ScreenshotUploader` + server action `uploadTicketScreenshot`).
+- [x] Almacenamiento (Supabase Storage local) con `url` real en `Screenshot`
+      (bucket `tenant-media`, path `<tenant_id>/<ticket>/<caption>.<ext>`,
+      idempotente por captura; `next.config` ya habilita el host para `next/image`).
 
 **Hecho cuando:** un ticket puede mostrar capturas reales subidas por una persona
-o por un agente.
+o por un agente. ✓ (test `tests/screenshot-upload.test.ts`)
 
 ### Fase 4 — Integración Odoo `[v2 / exploratorio]`
 

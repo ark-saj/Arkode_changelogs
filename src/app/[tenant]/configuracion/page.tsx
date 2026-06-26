@@ -2,8 +2,12 @@ import { notFound, redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { LogoUploader } from "@/components/changelog/logo-uploader";
+import {
+  ScreenshotUploader,
+  type TicketOption,
+} from "@/components/changelog/screenshot-uploader";
 import { Eyebrow } from "@/components/mosaic/eyebrow";
-import { hasSupabaseCredentials } from "@/lib/data/repository";
+import { getRepository, hasSupabaseCredentials } from "@/lib/data/repository";
 import { isTenantAdmin, resolveTenant } from "@/lib/data/tenant-context";
 import { SettingsChrome } from "./settings-chrome";
 
@@ -22,6 +26,15 @@ export default async function SettingsPage({
   // Members can't configure the company — only admins.
   if (hasSupabaseCredentials() && !(await isTenantAdmin(slug))) {
     redirect(`/${slug}`);
+  }
+
+  // Tickets for the screenshot picker (Supabase mode only; RLS scopes them).
+  let tickets: TicketOption[] = [];
+  if (hasSupabaseCredentials()) {
+    const data = await getRepository().getChangelog(slug);
+    tickets = data.entries.flatMap((entry) =>
+      entry.tickets.map((t) => ({ code: t.code, title: t.title })),
+    );
   }
 
   return (
@@ -65,6 +78,19 @@ export default async function SettingsPage({
           currentLogo={tenant.logo}
         />
       </section>
+
+      {hasSupabaseCredentials() && (
+        <section aria-labelledby="shots-title" className="mt-12 space-y-5">
+          <div className="sub-h" id="shots-title">
+            Capturas de los cambios
+          </div>
+          <p className="text-sm text-mute">
+            Sumá una imagen o un video real a cualquier cambio. Aparece en su
+            tarjeta dentro del portal.
+          </p>
+          <ScreenshotUploader tenantSlug={slug} tickets={tickets} />
+        </section>
+      )}
       </div>
     </>
   );

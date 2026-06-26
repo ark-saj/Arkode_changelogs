@@ -54,6 +54,9 @@ per-tenant token can only ever write to its own tenant.
 4. `upsert_ticket { date, code, title, summary, status, categoryKey,
    whatChanged, whyUseful, whereToFind, featured? }` → each change (idempotent
    by `code`).
+5. `attach_screenshot { ticketCode, caption, filePath? | url? }` → add a real
+   capture to a change (idempotent by `ticket` + `caption`). Caption the benefit,
+   not the screen ("Alertas de oportunidades por vencer", not "Vista de lista").
 
 ### Via CLI
 

@@ -43,6 +43,8 @@ export function errorResponse(err: unknown): NextResponse {
       { status },
     );
   }
+  // Unexpected: log the full context server-side, return a generic message.
+  console.error("[api/v1] unexpected error:", err);
   return NextResponse.json({ error: "Internal error." }, { status: 500 });
 }
 
