@@ -63,9 +63,10 @@ function need(value, name) {
 const HELP = `Arkode changelog CLI
 
 Commands:
-  whoami            Show the tenant the token belongs to
-  create-changelog  Create/update a dated release entry (idempotent by date)
-  upsert-ticket     Add/update one user-facing change (idempotent by code)
+  whoami             Show the tenant the token belongs to
+  create-changelog   Create/update a dated release entry (idempotent by date)
+  upsert-ticket      Add/update one user-facing change (idempotent by code)
+  attach-screenshot  Attach a real capture to a ticket (--file <path> | --url <url>)
 
 Auth: --token <t> or ARK_API_TOKEN.  Base URL: ARK_API_BASE_URL (default ${BASE_URL}).`;
 
@@ -111,6 +112,28 @@ async function main() {
           : [],
       featured: args.featured === true || args.featured === "true",
     });
+    console.log(JSON.stringify(r, null, 2));
+    return;
+  }
+
+  if (cmd === "attach-screenshot") {
+    const body = {
+      ticketCode: need(args.ticket, "ticket"),
+      caption: need(args.caption, "caption"),
+    };
+    if (typeof args.file === "string") {
+      const { readFile } = await import("node:fs/promises");
+      const bytes = await readFile(args.file);
+      body.data = bytes.toString("base64");
+      body.filename = args.file.split(/[\\/]/).pop();
+    } else if (typeof args.url === "string") {
+      body.url = args.url;
+    } else {
+      console.error("Provide --file <path> or --url <url>");
+      process.exit(2);
+    }
+    if (typeof args.variant === "string") body.variant = args.variant;
+    const r = await api("/api/v1/screenshots", need(token, "token"), body);
     console.log(JSON.stringify(r, null, 2));
     return;
   }

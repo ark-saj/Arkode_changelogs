@@ -14,6 +14,8 @@
  *   ARK_API_BASE_URL  default http://127.0.0.1:3000
  *   ARK_TOKENS        "conecta=ark_conecta_devtoken,everban=ark_everban_devtoken"
  */
+import { readFile } from "node:fs/promises";
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -130,6 +132,39 @@ server.tool(
     featured: z.boolean().optional().describe("Mark as a highlighted change."),
   },
   async (args) => ok(await api("/api/v1/tickets", activeToken(), args)),
+);
+
+server.tool(
+  "attach_screenshot",
+  "Attach a real screenshot or short clip to a ticket in the active portal. Provide a local filePath to upload, or an already-hosted url. Idempotent by (ticket, caption).",
+  {
+    ticketCode: z.string().describe('Ticket code, e.g. "CRM-001".'),
+    caption: z.string().describe("Short, user-friendly caption for the capture."),
+    filePath: z
+      .string()
+      .optional()
+      .describe("Local path to an image/video to upload (png, jpg, webp, gif, mp4, webm)."),
+    url: z
+      .string()
+      .optional()
+      .describe("Use an already-hosted media URL instead of uploading a file."),
+    variant: z
+      .enum(["form", "list", "dashboard", "kanban", "report"])
+      .optional(),
+  },
+  async ({ ticketCode, caption, filePath, url, variant }) => {
+    const body = { ticketCode, caption, variant };
+    if (filePath) {
+      const bytes = await readFile(filePath);
+      body.data = bytes.toString("base64");
+      body.filename = filePath.split(/[\\/]/).pop();
+    } else if (url) {
+      body.url = url;
+    } else {
+      throw new Error("Provide either filePath or url.");
+    }
+    return ok(await api("/api/v1/screenshots", activeToken(), body));
+  },
 );
 
 const transport = new StdioServerTransport();

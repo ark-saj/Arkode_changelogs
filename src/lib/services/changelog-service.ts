@@ -1,6 +1,14 @@
 import { z } from "zod";
 
 import { getServiceClient } from "@/lib/supabase/service";
+import {
+  inferExt,
+  slugify,
+  uploadTicketMedia,
+} from "@/lib/services/storage";
+
+/** Max decoded media size accepted for inline (base64) uploads: ~9 MB. */
+const MAX_MEDIA_BYTES = 9 * 1024 * 1024;
 
 /**
  * ChangelogService — the single write boundary for changelog content.
@@ -75,6 +83,11 @@ const ScreenshotInput = z.object({
   url: z.string().trim().min(1).optional(),
   poster: z.string().trim().min(1).optional(),
   seed: z.number().int().optional(),
+  // Inline upload: base64 file bytes (no data: URI prefix). When present, the
+  // file is uploaded to tenant-media and its public URL becomes `url`.
+  data: z.string().min(1).optional(),
+  filename: z.string().trim().min(1).optional(),
+  contentType: z.string().trim().min(1).optional(),
 });
 
 export type EntryInputType = z.infer<typeof EntryInput>;
@@ -219,13 +232,38 @@ export class ChangelogService {
       );
     }
 
+    // Inline upload: decode the bytes, store them in tenant-media, and use the
+    // resulting public URL. The path is scoped to this tenant (the boundary).
+    let url = input.url ?? null;
+    let kind = input.kind ?? null;
+    if (input.data) {
+      const bytes = Buffer.from(input.data, "base64");
+      if (bytes.length === 0) {
+        throw new ServiceError("validation", "Empty media payload.");
+      }
+      if (bytes.length > MAX_MEDIA_BYTES) {
+        throw new ServiceError("validation", "Media too large (max 9 MB).");
+      }
+      const ext = inferExt(input.filename, input.contentType);
+      const uploaded = await uploadTicketMedia({
+        tenantId: input.tenantId,
+        ticketCode: input.ticketCode,
+        captionSlug: slugify(input.caption),
+        ext,
+        bytes,
+        contentType: input.contentType,
+      });
+      url = uploaded.url;
+      kind = kind ?? uploaded.kind;
+    }
+
     const row = {
       tenant_id: input.tenantId,
       ticket_id: ticket.data.id,
       caption: input.caption,
       variant: input.variant ?? null,
-      kind: input.kind ?? null,
-      url: input.url ?? null,
+      kind,
+      url,
       poster: input.poster ?? null,
       seed: input.seed ?? null,
     };
