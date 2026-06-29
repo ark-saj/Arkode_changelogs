@@ -64,6 +64,7 @@ const HELP = `Arkode changelog CLI
 
 Commands:
   whoami             Show the tenant the token belongs to
+  embed-url          Mint a public embed URL for Odoo (read-only iframe link)
   create-changelog   Create/update a dated release entry (idempotent by date)
   upsert-ticket      Add/update one user-facing change (idempotent by code)
   attach-screenshot  Attach a real capture to a ticket (--file <path> | --url <url>)
@@ -82,6 +83,12 @@ async function main() {
 
   if (cmd === "whoami") {
     const r = await api("/api/v1/whoami", need(token, "token"), null, "GET");
+    console.log(JSON.stringify(r, null, 2));
+    return;
+  }
+
+  if (cmd === "embed-url") {
+    const r = await api("/api/v1/embed-url", need(token, "token"), null, "GET");
     console.log(JSON.stringify(r, null, 2));
     return;
   }
