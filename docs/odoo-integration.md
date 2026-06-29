@@ -138,19 +138,35 @@ fase exploratoria):
   tenant) o `node scripts/changelog-cli.mjs embed-url --token <t>`.
 - **Middleware**: `/embed/*` se excluye del gating de login (es público + token).
 
-### Cómo demostrarlo dentro de Odoo
+### Probado en vivo ✅ (Odoo 19, local Docker)
 
-1. Obtener la URL: `npm run changelog -- embed-url --token <write-token>`.
-2. En Odoo (Website → editar página, o un ítem de portal) insertar un bloque
-   HTML con el iframe:
+El "hecho cuando" se cerró contra un Odoo 19 real. Se construyó un addon mínimo
+**`arkode_novedades`** (ver [`integrations/odoo/`](../integrations/odoo/)) que da
+dos accesos:
 
-   ```html
-   <iframe src="https://<portal>/embed/<tenant>?token=<token>"
-           style="width:100%;height:80vh;border:0" loading="lazy"></iframe>
-   ```
+- **App "Novedades"** en el backend → acción cliente (OWL) que embebe el
+  changelog dentro de Odoo, con su chrome. Es el acceso desde la UI (sin tocar
+  la URL).
+- **Página pública `/novedades`** → la misma vista embebida, standalone.
 
-3. Configurar `ODOO_EMBED_ORIGIN` con el origen de esa instancia Odoo para que
-   `frame-ancestors` permita el framing.
+Pasos de la prueba:
+
+1. Mintear la URL: `npm run changelog -- embed-url --token <write-token>`.
+2. Setear `ODOO_EMBED_ORIGIN=http://localhost:8069` en el changelog (para que
+   `frame-ancestors` permita a Odoo embeberlo).
+3. Instalar el addon y abrir Odoo → apps → **Novedades**.
+
+Verificado: la app aparece en Odoo, el iframe a `…/embed/conecta` **renderiza
+dentro del backend** (el CSP del backend no lo bloquea) y el token aísla por
+tenant (un token de A en `/embed/B` → 404).
+
+Para embeber en Website/Knowledge (cuando el cliente los tenga) el bloque es el
+mismo iframe:
+
+```html
+<iframe src="https://<portal>/embed/<tenant>?token=<token>"
+        style="width:100%;height:80vh;border:0" loading="lazy"></iframe>
+```
 
 ### Configuración (env)
 
@@ -160,10 +176,10 @@ fase exploratoria):
 | `ODOO_EMBED_ORIGIN`  | Origen de Odoo permitido en `frame-ancestors`         |
 | `APP_PUBLIC_URL`     | Base para construir las URLs absolutas de embed       |
 
-> **Pendiente para cerrar el "hecho cuando" en vivo**: una instancia Odoo
-> (Community o Enterprise) donde pegar el iframe. El artefacto de nuestro lado ya
-> está y verificado (la vista embebible renderiza el changelog por tenant, sin
-> login y con aislamiento por token).
+> **Hecho cuando — cerrado en vivo** contra Odoo 19 local: la app "Novedades"
+> muestra el changelog embebido dentro del backend de Odoo, por tenant y con
+> aislamiento por token. El addon del lado Odoo está versionado en
+> [`integrations/odoo/`](../integrations/odoo/).
 
 ### Seguridad (notas)
 

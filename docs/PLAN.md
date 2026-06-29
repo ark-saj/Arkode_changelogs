@@ -207,10 +207,10 @@ o por un agente. ✓ (test `tests/screenshot-upload.test.ts`)
       quedan documentados como alternativas para v2.
 
 **Hecho cuando:** existe una prueba de concepto de changelog visible desde Odoo.
-~ PoC del lado del portal listo y verificado: vista pública embebible
-`/embed/<tenant>?token=…` (solo lectura, sin chrome, aislada por token) +
-`frame-ancestors` + helper `embed-url`. Falta una instancia Odoo real donde
-pegar el iframe para cerrarlo "en vivo" (ver odoo-integration.md §8).
+✓ **Cerrado en vivo** contra Odoo 19 (local Docker): app "Novedades" en el
+backend que embebe el changelog por tenant (aislado por token). Vista embebible
+`/embed/<tenant>?token=…` + `frame-ancestors` + helper `embed-url` del lado del
+portal; addon del lado Odoo en `integrations/odoo/`. Ver odoo-integration.md §8.
 
 ---
 
