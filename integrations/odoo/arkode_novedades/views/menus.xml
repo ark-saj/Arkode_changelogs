@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Client action that renders the embedded changelog. -->
+    <record id="action_arkode_novedades" model="ir.actions.client">
+        <field name="name">Centro de Novedades</field>
+        <field name="tag">arkode_novedades.embed</field>
+    </record>
+
+    <!-- Top-level app menu + entry, so it's reachable from the Odoo UI. -->
+    <menuitem id="menu_arkode_root"
+              name="Novedades"
+              sequence="50"/>
+    <menuitem id="menu_arkode_novedades"
+              name="Centro de Novedades"
+              parent="menu_arkode_root"
+              action="action_arkode_novedades"
+              sequence="10"/>
+</odoo>

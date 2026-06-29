@@ -16,9 +16,13 @@ export async function middleware(request: NextRequest) {
   // Mock/demo mode: no backend → no auth gating.
   if (!url || !anon) return NextResponse.next();
 
-  // The write API (Fase 2) authenticates with a per-tenant bearer token, not
-  // the session cookie — never gate or redirect it through the login flow.
-  if (request.nextUrl.pathname.startsWith("/api/")) return NextResponse.next();
+  // The write API (Fase 2) authenticates with a per-tenant bearer token, and
+  // the public embed view (Fase 4) authenticates with a signed token in the URL
+  // — neither uses the session cookie, so never gate them through login.
+  const path = request.nextUrl.pathname;
+  if (path.startsWith("/api/") || path.startsWith("/embed/")) {
+    return NextResponse.next();
+  }
 
   let response = NextResponse.next({ request });
 
@@ -43,7 +47,6 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
   const isLogin = path === "/login";
   const isRoot = path === "/";
 

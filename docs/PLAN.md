@@ -201,11 +201,16 @@ o por un agente. ✓ (test `tests/screenshot-upload.test.ts`)
 
 ### Fase 4 — Integración Odoo `[v2 / exploratorio]`
 
-- [ ] Investigar embeber el changelog en Odoo o volcarlo a un knowledge base
-      (incluyendo imágenes).
-- [ ] Definir el "cómo" (embed, sync, o knowledge base). Aún abierto.
+- [x] Investigar embeber el changelog en Odoo o volcarlo a un knowledge base
+      (incluyendo imágenes). Ver [odoo-integration.md](odoo-integration.md).
+- [x] Definir el "cómo": **embed (iframe)**. Sync a Knowledge / módulo a medida
+      quedan documentados como alternativas para v2.
 
 **Hecho cuando:** existe una prueba de concepto de changelog visible desde Odoo.
+✓ **Cerrado en vivo** contra Odoo 19 (local Docker): app "Novedades" en el
+backend que embebe el changelog por tenant (aislado por token). Vista embebible
+`/embed/<tenant>?token=…` + `frame-ancestors` + helper `embed-url` del lado del
+portal; addon del lado Odoo en `integrations/odoo/`. Ver odoo-integration.md §8.
 
 ---
 
