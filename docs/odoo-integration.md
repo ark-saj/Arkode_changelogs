@@ -125,10 +125,11 @@ Community.
 Enfoque elegido: **embed**. Implementado de nuestro lado (sin instancia Odoo,
 fase exploratoria):
 
-- **Vista pública embebible**: `GET /embed/<tenant>?token=…` — solo lectura, sin
-  chrome de navegación, fuera del layout con guard de sesión. Reusa
-  `TicketCard` + galería de capturas reales (misma lectura que el portal, vía
-  `readChangelogData`, pero con el **service client** porque no hay sesión).
+- **Vista pública embebible**: `GET /embed/<tenant>?token=…` — fuera del layout
+  con guard de sesión. Renderiza el **mismo shell del portal** (`ChangelogPortal`:
+  sidebar, dark mode, búsqueda, hero, KPIs, timeline) en modo público — sin
+  login ni link a Configuración. Lee con el **service client** (sin sesión),
+  acotado al tenant del token.
 - **Token firmado por tenant** (`src/lib/auth/embed-token.ts`): HMAC-SHA256 del
   slug, stateless, estable para un iframe de larga vida. Nombra **un solo
   tenant** → un token de A no puede ver el changelog de B (verificado: 404).
